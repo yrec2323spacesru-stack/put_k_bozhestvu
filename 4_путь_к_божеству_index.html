@@ -1,0 +1,3269 @@
+<!DOCTYPE html> 
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Врата Перерождения: Путь к Божеству</title>
+    <style>
+        :root {
+            --bg-deep: #02040a;
+            --sys-card: #0b0f19;
+            --sys-border: #1e293b;
+            --neon-blue: #38bdf8;
+            --neon-purple: #c084fc;
+            --neon-gold: #facc15;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+            --accent-red: #f43f5e;
+            --aura-color: #38bdf8;
+            --epoch-glow: rgba(56, 189, 248, 0.2);
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--bg-deep) 85%);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 40px;
+        }
+
+        /* Индикатор текущей Эпохи */
+        .epoch-banner {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.9));
+            border: 1px solid var(--aura-color);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 15px var(--epoch-glow);
+            transition: 0.5s;
+        }
+        .epoch-title { font-size: 11px; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1px; }
+        .epoch-sub { font-size: 9px; color: var(--text-muted); }
+
+        /* Шапка Системы с Аватаром и Кольцами */
+        .sys-header {
+            background: linear-gradient(145deg, #0f172a 0%, #020617 100%);
+            border: 1px solid var(--sys-border);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 0 20px var(--epoch-glow);
+            position: relative;
+            overflow: hidden;
+            transition: 0.5s;
+        }
+
+        .sys-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--aura-color);
+            box-shadow: 0 0 10px var(--aura-color);
+            transition: 0.3s;
+        }
+
+        /* Контейнер Аватара с орбитами Колец */
+        .avatar-wrapper {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .avatar-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #020617;
+            border: 2px solid var(--aura-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 0 15px var(--aura-color);
+            z-index: 2;
+            transition: 0.3s;
+        }
+
+        .ring-orbit {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            opacity: 0;
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+
+        .ring-1 { width: 58px; height: 58px; border-color: #facc15; box-shadow: 0 0 8px #facc15; }
+        .ring-2 { width: 64px; height: 64px; border-color: #c084fc; box-shadow: 0 0 10px #c084fc; }
+        .ring-3 { width: 70px; height: 70px; border-color: #38bdf8; border-top-color: #fff; box-shadow: 0 0 12px #38bdf8; }
+        .ring-4 { width: 76px; height: 76px; border-color: #f43f5e; box-shadow: 0 0 15px #f43f5e; }
+
+        .ring-active { opacity: 1; }
+
+        .header-info { text-align: left; flex-grow: 1; }
+        .header-info h2 {
+            margin: 0 0 2px 0;
+            color: var(--neon-blue);
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .rank-tag { color: var(--neon-gold); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .ability-tag {
+            font-size: 9px;
+            color: var(--neon-purple);
+            background: rgba(192, 132, 252, 0.1);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        /* Навигационная панель */
+        .quick-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .quick-nav button {
+            background: #090d16;
+            border: 1px solid var(--sys-border);
+            color: var(--neon-blue);
+            padding: 8px 4px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quick-nav button:active { background: var(--neon-blue); color: #000; }
+
+        /* Панель статов */
+        .stats-panel {
+            background: var(--sys-card);
+            border: 1px solid var(--sys-border);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        .stat-line { display: flex; justify-content: space-between; font-size: 11px; }
+        .stat-line span:first-child { color: var(--text-muted); }
+        .stat-line span:last-child { font-weight: 700; color: #fff; }
+
+        .progress-bar-bg {
+            width: 100%;
+            background: #020617;
+            border-radius: 4px;
+            height: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e40af, var(--neon-blue));
+            box-shadow: 0 0 8px var(--neon-blue);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .energy-fill {
+            background: linear-gradient(90deg, #15803d, #22c55e);
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 6px;
+            font-size: 11px;
+        }
+
+        .actions-box { display: flex; flex-direction: column; gap: 8px; }
+        .section-header {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        button.sys-btn {
+            background: #0f172a;
+            color: var(--text-main);
+            border: 1px solid #334155;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        button.sys-btn:active { transform: scale(0.98); }
+
+        button.btn-gate { background: linear-gradient(135deg, #0891b2, #06b6d4); border: none; color: #fff; box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+        button.btn-meditate { background: linear-gradient(135deg, #166534, #22c55e); border: none; color: #fff; }
+        button.btn-evolve { background: linear-gradient(135deg, #6b21a8, #9333ea); border: none; color: #fff; }
+        button.btn-rebirth { background: linear-gradient(135deg, #be185d, var(--accent-red)); border: none; color: #fff; display: none; box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+
+        /* Терминал логов */
+        .log-terminal {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 10px;
+            height: 100px;
+            overflow-y: auto;
+            font-size: 10px;
+            font-family: monospace;
+            color: var(--neon-blue);
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .log-row { border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 2px; }
+
+        /* Модальные окна */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-body {
+            background: #090d19;
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 30px rgba(192, 132, 252, 0.2);
+            padding: 18px;
+            border-radius: 18px;
+            width: 85%;
+            max-width: 340px;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .modal-body h3 { margin: 0; color: var(--neon-purple); font-size: 16px; letter-spacing: 1px; }
+
+        .hero-option {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .hero-option:hover { border-color: var(--neon-purple); background: #161c2d; }
+
+        .gate-item-card, .item-slot {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            text-align: left;
+        }
+
+        .gate-rank-badge {
+            font-weight: 900; font-size: 14px; padding: 4px 8px; border-radius: 6px; color: #fff; min-width: 35px; text-align: center;
+        }
+        .badge-E { background: #64748b; }
+        .badge-D { background: #16a34a; }
+        .badge-C { background: #2563eb; }
+        .badge-B { background: #9333ea; }
+        .badge-A { background: #ca8a04; }
+        .badge-S { background: #dc2626; }
+        .badge-SSS { background: linear-gradient(135deg, #ec4899, #8b5cf6); box-shadow: 0 0 8px #ec4899; }
+
+        /* Уведомление */
+        #customToast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50px);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #38bdf8;
+            color: #f8fafc;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 99999;
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-align: center;
+            pointer-events: none;
+        }
+        #customToast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Инвентарь: экипировка по бокам персонажа и растущий рюкзак */
+/* Центральная экипировка остаётся неподвижной; прокручивается только рюкзак */
+#inventoryView {
+    overflow: hidden !important;
+}
+
+
+
+/* ==========================================
+   ПАНЕЛЬ ЭКИПИРОВКИ
+   ========================================== */
+
+.equipment-panel {
+    width: 100%;
+    max-width: 450px;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+
+    position: relative;
+    z-index: 5;
+    isolation: isolate;
+    overflow: hidden;
+
+    border: 1px solid rgba(167,139,250,.8);
+    border-radius: 14px;
+
+    background-image:
+        linear-gradient(
+            145deg,
+            rgba(15,23,42,.03),
+            rgba(30,27,75,.05)
+        ),
+        url('images/character.png');
+
+    background-size: auto 100%;
+    background-position: center top;
+    background-repeat: no-repeat;
+
+    box-shadow:
+        inset 0 0 15px rgba(139,92,246,.10),
+        0 0 14px rgba(139,92,246,.25),
+        0 8px 24px rgba(0,0,0,.15);
+}
+
+/* ==========================================
+   ЗАГОЛОВОК ЭКИПИРОВКИ
+   ========================================== */
+
+.equipment-title {
+    position: relative;
+    z-index: 1;
+    color: #ffffff;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-align: center;
+    text-shadow: 0 2px 5px #000;
+}
+
+
+/* ==========================================
+   РАСПОЛОЖЕНИЕ ЭКИПИРОВКИ
+   ========================================== */
+
+.equipment-layout {
+    display: grid;
+    grid-template-columns: minmax(54px, 1fr) minmax(100px, 1.45fr) minmax(54px, 1fr);
+    gap: 8px;
+    align-items: center;
+
+    position: relative;
+    isolation: isolate;
+
+    padding: 8px 5px;
+    border-radius: 0;
+    overflow: hidden;
+
+    /* Убираем общую рамку и фон */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+
+/* ==========================================
+   БОКОВЫЕ ЯЧЕЙКИ
+   ========================================== */
+
+.equipment-side {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ==========================================
+   СЛОТЫ ЭКИПИРОВКИ
+   ========================================== */
+
+.gear-slot {
+    min-width: 0;
+    min-height: 58px;
+    padding: 4px;
+    box-sizing: border-box;
+
+    border: 1px solid rgba(148,163,184,.65);
+    border-radius: 9px;
+
+    background: rgba(15,23,42,.48);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+
+    box-shadow:
+        inset 0 0 10px rgba(56,189,248,.08),
+        0 0 8px rgba(56,189,248,.08);
+}
+
+.gear-slot.filled {
+    border-color: rgba(56,189,248,.9);
+
+    box-shadow:
+        inset 0 0 12px rgba(56,189,248,.18),
+        0 0 10px rgba(56,189,248,.18);
+}
+
+/* ==========================================
+   ИКОНКИ ПРЕДМЕТОВ
+   ========================================== */
+
+.gear-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    background-color: rgba(30,41,59,.85);
+    background-size: 300% 300%;
+    background-repeat: no-repeat;
+
+    border: 1px solid rgba(148,163,184,.4);
+    font-size: 20px;
+}
+
+/* ==========================================
+   НАЗВАНИЯ СЛОТОВ
+   ========================================== */
+
+.gear-label {
+    color: #cbd5e1;
+    font-size: 8px;
+    text-align: center;
+    line-height: 1.15;
+}
+
+.gear-name {
+    color: #ffffff;
+    font-size: 8px;
+    text-align: center;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   ОТОБРАЖЕНИЕ ПЕРСОНАЖА
+   ========================================== */
+
+.character-display {
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   РАМКА ФОТОГРАФИИ ПЕРСОНАЖА
+   ========================================== */
+
+.character-portrait {
+    width: 100%;
+    max-width: 132px;
+    aspect-ratio: 3/4;
+
+    border: 2px solid var(--aura-color, #38bdf8);
+    border-radius: 12px;
+
+    background: radial-gradient(
+        ellipse at center,
+        rgba(56,189,248,.22),
+        rgba(15,23,42,.65) 70%
+    );
+
+    box-shadow:
+        0 0 12px rgba(56,189,248,.25),
+        inset 0 0 12px rgba(139,92,246,.12);
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.character-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ==========================================
+   ИМЯ ПЕРСОНАЖА
+   ========================================== */
+
+.character-name {
+    color: #ffffff;
+    font-size: 11px;
+    text-align: center;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   ЗАГОЛОВОК РЮКЗАКА
+   ========================================== */
+
+.backpack-heading {
+    width: 100%;
+    max-width: 520px;
+
+    color: #fbbf24;
+    font-size: 13px;
+    font-weight: bold;
+
+    margin: 2px 0 8px;
+
+    text-shadow: 0 0 8px rgba(251,191,36,.25);
+}
+/* ==========================================
+   ЗАГОЛОВОК РЮКЗАКА
+   ========================================== */
+
+.backpack-heading {
+    width: 100%;
+    max-width: 520px;
+
+    color: #fbbf24;
+    font-size: 13px;
+    font-weight: bold;
+
+    margin: 2px 0 8px;
+    padding: 7px 9px;
+
+    box-sizing: border-box;
+
+    border-left: 3px solid #f59e0b;
+    border-radius: 5px;
+
+    background: linear-gradient(
+        90deg,
+        rgba(245,158,11,.16),
+        rgba(30,41,59,.08)
+    );
+
+    text-shadow: 0 0 8px rgba(251,191,36,.35);
+}
+      
+      /* ===== ИНВЕНТАРЬ: прокручиваемый список предметов ===== */
+        #inventoryList.inventory-grid {
+            display:grid !important;
+            grid-template-columns:repeat(4, minmax(0, 1fr)); /* РОВНО 4 ячейки в одном ряду */
+            flex:1 1 auto; min-height:0; align-content:start; gap:7px;
+            width:100%; max-width:520px; max-height:none !important;
+            overflow-y:auto !important; overflow-x:hidden; overscroll-behavior:contain;
+            padding:4px 3px 18px; box-sizing:border-box;
+        }
+
+        /* ОДНА ЯЧЕЙКА РЮКЗАКА: размер, рамка и расположение содержимого */
+        .inventory-slot {
+            width:100%; min-width:0; min-height:94px; box-sizing:border-box;
+            display:flex; flex-direction:column; align-items:center;
+            justify-content:flex-start; gap:4px; padding:6px 3px;
+            border:1px solid rgba(51,65,85,.72); border-radius:8px;
+            background:linear-gradient(145deg,rgba(30,41,59,.84),rgba(2,6,23,.96));
+            overflow:hidden;
+        }
+        /* Подсветка ячейки, в которой лежит предмет */
+        .inventory-slot.has-item { border-color:rgba(56,189,248,.55); }
+        .empty-backpack { width:100%; padding:22px 10px; border:1px dashed rgba(100,116,139,.38); border-radius:10px; color:#64748b; font-size:12px; text-align:center; box-sizing:border-box; }
+        /* КАРТИНКА ПРЕДМЕТА ВНУТРИ ЯЧЕЙКИ */
+        .item-image-wrap { width:44px; height:44px; flex:0 0 44px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(148,163,184,.28); border-radius:7px; background:rgba(2,6,23,.75); overflow:hidden; background-size:300% 300%; background-repeat:no-repeat; }
+        .inventory-item-image { width:100%; height:100%; object-fit:contain; display:block; }
+        .item-fallback-icon { font-size:25px; }
+        /* Название предмета под картинкой */
+        .inventory-item-name { width:100%; color:#f8fafc; font-size:9px; line-height:1.2; text-align:center; overflow-wrap:anywhere; max-height:23px; overflow:hidden; }
+        /* Сила или тип предмета */
+        .inventory-item-power { color:#38bdf8; font-size:8px; text-align:center; }
+        /* КНОПКИ ДЕЙСТВИЙ С ПРЕДМЕТОМ */
+        .inventory-actions { margin-top:auto; display:flex; flex-direction:column; gap:4px; width:100%; }
+        .inventory-item-action { width:100%; padding:5px 2px; border-radius:5px; border:1px solid #3b82f6; background:#1d4ed8; color:white; font-size:9px; font-weight:700; }
+        .inventory-item-sell { width:100%; padding:5px 2px; border-radius:5px; border:1px solid #b45309; background:rgba(120,53,15,.92); color:#fde68a; font-size:9px; font-weight:700; }
+        .inventory-item-sell:active, .inventory-item-action:active { transform:scale(.98); }
+        /* АДАПТАЦИЯ ЭКИПИРОВКИ ДЛЯ УЗКОГО ЭКРАНА ТЕЛЕФОНА */
+        @media (max-width:420px) {
+            .equipment-panel { padding:7px; gap:7px; margin-bottom:7px; }
+            .equipment-layout { grid-template-columns: minmax(48px,1fr) minmax(88px,1.35fr) minmax(48px,1fr); gap:5px; padding:5px 2px; }
+            .gear-slot { min-height:50px; }
+            .gear-icon { width:29px;height:29px; }
+            .character-portrait { max-width:112px; }
+            .equipment-title { font-size:11px; }
+        }
+        /* АДАПТАЦИЯ ЭКИПИРОВКИ ДЛЯ НИЗКОГО ЭКРАНА */
+        @media (max-height:650px) {
+            .equipment-panel { gap:5px; padding:6px; }
+            .equipment-layout { gap:5px; padding:4px 2px; }
+            .gear-slot { min-height:44px; padding:3px; }
+            .gear-icon { width:27px; height:27px; }
+            .character-portrait { max-width:94px; }
+            .character-display { gap:4px; }
+        }
+
+        /* Кнопка и Модальное окно Магазина снаряжения */
+        .shop-trigger-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ff8c00, #ff4500);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        
+/* ===== НАЧАЛО БЛОКА: ФОН МАГАЗИНА ===== */
+
+/* Полноэкранный магазин */
+.shop-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    box-sizing: border-box;
+    padding: 18px 12px;
+
+    /* Общая фотография игры */
+    background:
+        linear-gradient(
+            rgba(5, 8, 18, 0.25),
+            rgba(5, 8, 18, 0.25)
+        ),
+        url("images/Fon.png") center center / cover no-repeat;
+
+    overflow-y: auto;
+    z-index: 2000;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Основная область магазина */
+.shop-content {
+    background: rgba(7, 11, 20, 0.30);
+
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    border-radius: 16px;
+
+    width: 100%;
+    max-width: 420px;
+    min-height: calc(100% - 4px);
+
+    box-sizing: border-box;
+    padding: 16px 12px 24px;
+
+    color: #fff;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.45),
+        inset 0 0 15px rgba(148, 163, 184, 0.08);
+}
+
+/* ===== КОНЕЦ БЛОКА: ФОН МАГАЗИНА ===== */
+
+
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2d374d;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .shop-header h2 { font-size: 16px; margin: 0; color: var(--neon-gold); }
+
+        .currency-display {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: #fff; }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .shop-item {
+            background: #1f2636;
+            border: 1px solid #323d54;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .shop-item h3 {
+            font-size: 13px;
+            margin: 6px 0 2px 0;
+            color: #e2e8f0;
+        }
+
+        .item-desc {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+
+        .item-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            background-image: url('images/5.0.png');
+            background-size: 300% 300%;
+            border: 1px solid #475569;
+            background-color: #333;
+        }
+
+        .item-scorpion { background-position: 5% 15%; }
+        .item-wings    { background-position: 50% 15%; }
+        .item-cannon   { background-position: 95% 15%; }
+        .item-shield   { background-position: 95% 85%; }
+        /* Дополнительные предметы экипировки из сетки images/5.0.png */
+        .item-boots    { background-position: 5% 50%; }
+        .item-necklace { background-position: 50% 50%; }
+        .item-ring     { background-position: 95% 50%; }
+        .item-artifact { background-position: 5% 85%; }
+        .inventory-item-actions { display:flex; flex-direction:column; gap:4px; width:100%; margin-top:auto; }
+        .inventory-item-sell { width:100%; padding:4px 2px; border-radius:5px; border:1px solid #b45309; background:#92400e; color:#fff7ed; font-size:9px; font-weight:700; }
+
+        .buy-btn {
+            width: 100%;
+            padding: 6px;
+            background: #22c55e;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .buy-btn:hover { background: #16a34a; }
+    
+    /* ==========================================
+   ФОН ПЕРСОНАЖА В ПАНЕЛИ ЭКИПИРОВКИ
+   Здесь указывается отдельная фотография
+   ========================================== */
+
+.equipment-panel {
+    position: relative;
+    isolation: isolate;
+
+    background-image:
+        linear-gradient(
+            rgba(3, 7, 20, 0.30),
+            rgba(3, 7, 20, 0.55)
+        ),
+        url("images/0.1.png") !important;
+
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+}
+
+/* Слоты экипировки располагаются поверх фотографии */
+.equipment-layout {
+    position: relative;
+    z-index: 1;
+}
+
+/* Убираем маленький аватар из центра экипировки */
+#inventoryCharacterPortrait {
+    display: none !important;
+}
+
+/* Имя персонажа оставляем видимым */
+#inventoryCharacterName {
+    position: relative;
+    z-index: 2;
+}
+
+/* ===== СКРЫТЬ ИМЯ ПЕРСОНАЖА В ЭКИПИРОВКЕ ===== */
+#inventoryCharacterName {
+    display: none !important;
+}
+
+/* ===== ЧИСТАЯ ФОТОГРАФИЯ ЭКИПИРОВКИ ===== */
+.equipment-panel {
+    background-image: url("images/.png") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-color: transparent !important;
+}
+
+/* ===== ПРОЗРАЧНОСТЬ ОБЛАСТИ ЭКИПИРОВКИ ===== */
+
+.equipment-layout,
+.equipment-side {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+      
+   
+/* ===== ОКНО СБРОСА ПЕРСОНАЖА ===== */
+
+.reset-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    box-sizing: border-box;
+
+    background: rgba(2,6,23,.82);
+    backdrop-filter: blur(6px);
+}
+
+.reset-modal-box {
+    width: 100%;
+    max-width: 320px;
+    padding: 22px 18px;
+    box-sizing: border-box;
+
+    text-align: center;
+
+    background: linear-gradient(
+        145deg,
+        #1e293b,
+        #0f172a,
+        #1e1030
+    );
+
+    border: 1px solid rgba(239,68,68,.75);
+    border-radius: 16px;
+
+    box-shadow:
+        0 0 12px rgba(239,68,68,.25),
+        0 0 28px rgba(168,85,247,.18);
+}
+
+.reset-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.reset-title {
+    color: #fca5a5;
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(239,68,68,.4);
+}
+
+.reset-description {
+    color: #e2e8f0;
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 16px 0 20px;
+}
+
+.reset-description span {
+    color: #f87171;
+}
+
+.reset-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reset-confirm,
+.reset-cancel {
+    width: 100%;
+    padding: 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: .7px;
+    cursor: pointer;
+}
+
+.reset-confirm {
+    color: white;
+    background: linear-gradient(135deg,#991b1b,#dc2626);
+    border: 1px solid #f87171;
+    box-shadow: 0 0 12px rgba(239,68,68,.25);
+}
+
+.reset-cancel {
+    color: #c4b5fd;
+    background: rgba(109,40,217,.15);
+    border: 1px solid #7c3aed;
+}
+
+
+
+
+/* ===== КОМПАКТНАЯ ПАНЕЛЬ ХАРАКТЕРИСТИК ===== */
+
+.hero-stats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    margin-top: -5px;
+    padding: 7px;
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(135deg,
+            rgba(29, 33, 43, 0.98),
+            rgba(10, 13, 22, 0.99)
+        );
+
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    border-radius: 8px;
+
+    box-shadow:
+        inset 0 0 10px rgba(148, 163, 184, 0.06),
+        0 3px 10px rgba(0, 0, 0, 0.45);
+}
+
+/* Заголовок */
+.hero-stats::before {
+    content: "✦ ХАРАКТЕРИСТИКИ ✦";
+    grid-column: 1 / -1;
+    text-align: center;
+
+    color: #b9a5e8;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* Ячейки */
+.hero-stat-row {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+
+    padding: 6px 3px;
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(145deg,
+            rgba(55, 60, 73, 0.42),
+            rgba(19, 23, 34, 0.72)
+        );
+
+    border: 1px solid rgba(148, 163, 184, 0.20);
+    border-radius: 5px;
+
+    color: #aeb8c8;
+    font-size: 9px;
+    text-align: center;
+
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.025);
+}
+
+/* Значения */
+.hero-stat-row b {
+    color: #d6c7f5;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* Нижняя большая ячейка */
+.hero-stat-row:last-child {
+    grid-column: 1 / -1;
+
+    background:
+        linear-gradient(90deg,
+            rgba(39, 34, 55, 0.8),
+            rgba(24, 27, 39, 0.9),
+            rgba(39, 34, 55, 0.8)
+        );
+
+    border-color: rgba(167, 139, 250, 0.35);
+}
+
+/* ===== НАЧАЛО БЛОКА: ЕДИНЫЙ ФОН ВСЕЙ ИГРЫ ===== */
+
+html,
+body {
+    min-height: 100%;
+    background-image: url("images/Fon.png");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #080b14;
+}
+
+/* ===== КОНЕЦ БЛОКА: ЕДИНЫЙ ФОН ВСЕЙ ИГРЫ ===== */
+
+    
+/* =====================================================
+   НОВЫЙ ДИЗАЙН ГЛАВНОГО ЭКРАНА
+   Чёрный металл + серебро + тёмный фиолетовый + синий.
+   Это только оформление: игровые функции и ID сохранены.
+   ===================================================== */
+:root {
+    --neon-blue: #65cfff;
+    --neon-purple: #a78bfa;
+    --sys-border: rgba(148, 163, 184, .34);
+    --sys-card: rgba(8, 13, 25, .91);
+    --text-muted: #9aa9bd;
+}
+
+html, body {
+    background-color: #050812;
+    background-image:
+        radial-gradient(ellipse at 50% -10%, rgba(91, 75, 153, .30), transparent 48%),
+        radial-gradient(ellipse at 100% 45%, rgba(27, 105, 150, .13), transparent 42%),
+        linear-gradient(180deg, rgba(3, 6, 14, .76), rgba(3, 6, 14, .91)),
+        url("images/Fon.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+body { padding: 12px 10px 24px; }
+.container {
+    max-width: 460px;
+    gap: 11px;
+    padding: 10px 9px 28px;
+    border: 1px solid rgba(148, 163, 184, .18);
+    border-radius: 22px;
+    background: linear-gradient(155deg, rgba(8, 13, 25, .78), rgba(3, 7, 16, .88));
+    box-shadow: 0 18px 55px rgba(0,0,0,.48), inset 0 1px rgba(255,255,255,.045);
+    backdrop-filter: blur(9px);
+}
+
+.epoch-banner {
+    min-height: 43px;
+    padding: 9px 12px;
+    border: 1px solid rgba(167, 139, 250, .52);
+    border-radius: 13px;
+    background: linear-gradient(105deg, rgba(29, 27, 54, .94), rgba(8, 18, 34, .96) 62%, rgba(10, 29, 43, .94));
+    box-shadow: inset 0 1px rgba(255,255,255,.07), 0 5px 18px rgba(0,0,0,.3), 0 0 16px rgba(139,92,246,.12);
+}
+.epoch-title { color: #e4d8ff; font-size: 11px; letter-spacing: 1.35px; }
+.epoch-sub { color: #9eacc0; font-size: 9px; margin-top: 3px; }
+
+.sys-header {
+    min-height: 104px;
+    padding: 14px 13px;
+    gap: 15px;
+    border: 1px solid rgba(148, 163, 184, .52);
+    border-radius: 18px;
+    background:
+        linear-gradient(105deg, rgba(7, 12, 24, .96), rgba(18, 22, 39, .86) 58%, rgba(10, 25, 40, .94));
+    box-shadow: inset 0 1px rgba(255,255,255,.07), 0 9px 25px rgba(0,0,0,.42), 0 0 20px rgba(56,189,248,.08);
+}
+.sys-header::before { width: 3px; background: linear-gradient(180deg, #c4b5fd, #38bdf8); box-shadow: 0 0 14px #8b7ce8; }
+.avatar-wrapper { width: 82px; height: 82px; }
+.avatar-box {
+    width: 61px; height: 61px; border-radius: 15px;
+    border: 2px solid var(--aura-color);
+    background-color: #080d19;
+    box-shadow: 0 0 18px color-mix(in srgb, var(--aura-color), transparent 50%), inset 0 0 14px rgba(255,255,255,.08);
+}
+.ring-1 { width: 67px; height: 67px; }
+.ring-2 { width: 74px; height: 74px; }
+.ring-3 { width: 81px; height: 81px; }
+.ring-4 { width: 88px; height: 88px; }
+.header-info h2 { color: #dbeafe; font-size: 17px; letter-spacing: .7px; text-shadow: 0 0 12px rgba(56,189,248,.25); }
+.rank-tag { color: #d9c9ff; font-size: 10px; margin-top: 4px; }
+.ability-tag { color: #b8c8dc; background: rgba(56,189,248,.08); border-color: rgba(125,211,252,.22); border-radius: 6px; padding: 4px 7px; }
+
+.quick-nav { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 7px; }
+.quick-nav button {
+    min-height: 54px;
+    border: 1px solid rgba(148,163,184,.36);
+    border-radius: 11px;
+    color: #d5e7f7;
+    background: linear-gradient(155deg, rgba(35,43,59,.95), rgba(8,14,26,.98));
+    box-shadow: inset 0 1px rgba(255,255,255,.07), 0 4px 10px rgba(0,0,0,.25);
+    font-size: 10px;
+}
+.quick-nav button:active { background: linear-gradient(135deg, #334c68, #282044); color: #fff; transform: scale(.97); }
+
+.stats-panel {
+    position: relative;
+    padding: 13px;
+    gap: 9px;
+    border: 1px solid rgba(148,163,184,.38);
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(23,29,43,.96), rgba(7,12,23,.98) 72%);
+    box-shadow: inset 0 1px rgba(255,255,255,.055), 0 8px 22px rgba(0,0,0,.32);
+}
+.stats-panel::before {
+    content: "СОСТОЯНИЕ СИСТЕМЫ";
+    display: block;
+    color: #aebbd0;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(148,163,184,.17);
+}
+.stat-line { font-size: 11px; }
+.stat-line span:first-child { color: #a6b2c4; }
+.progress-bar-bg { height: 7px; border-radius: 8px; background: #030711; border-color: rgba(148,163,184,.15); }
+.progress-fill { border-radius: 8px; background: linear-gradient(90deg, #3657a5, #4cc9f0); }
+.energy-fill { background: linear-gradient(90deg, #287c70, #6bd6ad); }
+.grid-stats { gap: 7px; border-top-color: rgba(148,163,184,.18); }
+.grid-stats .stat-line { min-height: 31px; padding: 7px 8px; box-sizing: border-box; border: 1px solid rgba(148,163,184,.16); border-radius: 8px; background: rgba(30,41,59,.36); align-items: center; }
+
+.actions-box {
+    padding: 11px;
+    gap: 9px;
+    border: 1px solid rgba(148,163,184,.30);
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(20,25,39,.93), rgba(6,11,21,.97));
+    box-shadow: inset 0 1px rgba(255,255,255,.045), 0 8px 20px rgba(0,0,0,.28);
+}
+.section-header { color: #b6c1d2; font-size: 9px; letter-spacing: 1.8px; margin: 2px 0 1px; }
+button.sys-btn {
+    min-height: 43px;
+    border: 1px solid rgba(148,163,184,.35);
+    border-radius: 10px;
+    background: linear-gradient(145deg, #202b3d, #0c1423);
+    color: #e7edf6;
+    box-shadow: inset 0 1px rgba(255,255,255,.07), 0 4px 11px rgba(0,0,0,.24);
+}
+button.btn-gate {
+    min-height: 53px;
+    border: 1px solid rgba(125,211,252,.62);
+    background: linear-gradient(105deg, #164e70, #176b91 48%, #33305f);
+    color: #fff;
+    font-size: 13px;
+    letter-spacing: .35px;
+    box-shadow: inset 0 1px rgba(255,255,255,.18), 0 0 18px rgba(56,189,248,.17);
+}
+button.btn-meditate { background: linear-gradient(105deg, #174d4b, #17675d); border: 1px solid rgba(110,231,183,.35); }
+button.btn-evolve { background: linear-gradient(105deg, #38245e, #49347a); border: 1px solid rgba(196,181,253,.38); }
+button.btn-rebirth { background: linear-gradient(105deg, #5b234b, #7c294b); border: 1px solid rgba(251,113,133,.45); }
+
+.log-terminal {
+    height: 82px;
+    border: 1px solid rgba(125,211,252,.24);
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(4,10,20,.96), rgba(10,17,30,.98));
+    color: #9ddcf5;
+    box-shadow: inset 0 3px 10px rgba(0,0,0,.5);
+}
+
+/* Диалоговые окна остаются поверх всех экранов и сохраняют клики */
+.modal-body { border-color: rgba(167,139,250,.72); background: linear-gradient(145deg,#151b2b,#080d19 72%,#17132a); }
+.hero-option { border-color: rgba(148,163,184,.25); background: linear-gradient(110deg,rgba(35,43,59,.96),rgba(9,15,27,.98)); }
+
+@media (max-width: 360px) {
+    body { padding: 7px 5px 18px; }
+    .container { padding: 8px 7px 22px; gap: 9px; }
+    .quick-nav { gap: 5px; }
+    .quick-nav button { font-size: 9px; padding: 7px 2px; }
+    .avatar-wrapper { width: 72px; height: 72px; }
+    .avatar-box { width: 53px; height: 53px; }
+    .ring-1 { width: 59px; height: 59px; }
+    .ring-2 { width: 65px; height: 65px; }
+    .ring-3 { width: 71px; height: 71px; }
+    .ring-4 { width: 77px; height: 77px; }
+}
+
+</style>
+</head>
+<body>
+
+
+<!-- ===== АВТОРИЗАЦИЯ ИГРОКА ===== -->
+<div id="authScreen" style="
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    box-sizing:border-box;
+    background:linear-gradient(145deg,#080b20,#241344,#07172b);
+">
+    <div style="
+        width:100%;
+        max-width:360px;
+        padding:24px;
+        box-sizing:border-box;
+        border:1px solid #8b5cf6;
+        border-radius:18px;
+        background:linear-gradient(145deg,#17152f,#0b1224);
+        color:white;
+        text-align:center;
+        box-shadow:0 0 30px rgba(139,92,246,.3);
+    ">
+        <h2 style="color:#c084fc;">ВРАТА ПЕРЕРОЖДЕНИЯ</h2>
+        <p style="color:#94a3b8;font-size:13px;">
+            Войди в свой аккаунт или создай нового героя
+        </p>
+
+        <input id="authEmail" type="email"
+            placeholder="Электронная почта"
+            autocomplete="email"
+            style="width:100%;padding:13px;margin:8px 0;box-sizing:border-box;border-radius:8px;border:1px solid #475569;background:#111827;color:white;">
+
+        <input id="authPassword" type="password"
+            placeholder="Пароль (минимум 6 символов)"
+            autocomplete="current-password"
+            style="width:100%;padding:13px;margin:8px 0;box-sizing:border-box;border-radius:8px;border:1px solid #475569;background:#111827;color:white;">
+
+        <button onclick="registerAccount()" style="width:100%;padding:13px;margin-top:12px;border:0;border-radius:8px;background:#7c3aed;color:white;font-weight:bold;">
+            ✨ Регистрация
+        </button>
+
+        <button onclick="loginAccount()" style="width:100%;padding:13px;margin-top:10px;border:1px solid #38bdf8;border-radius:8px;background:#172554;color:white;font-weight:bold;">
+            ⚔️ Войти в аккаунт
+        </button>
+
+        <div id="authMessage" style="
+            min-height:35px;
+            margin-top:15px;
+            font-size:12px;
+            color:#facc15;
+            line-height:1.5;
+        "></div>
+    </div>
+</div>
+<!-- ===== КОНЕЦ АВТОРИЗАЦИИ ===== -->
+
+  
+    <!-- Меню выбора героя Семерки Шрека -->
+    <div id="heroModal" class="modal" style="display: none;">
+        <div class="modal-body">
+            <h3>[ИНИЦИАЛИЗАЦИЯ ШРЕКА]</h3>
+            <p style="font-size: 11px; color: var(--text-muted);">Выберите Боевого Духа эпохи:</p>
+            <div id="heroList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
+    </div>
+
+    <!-- Сюжетное окно Актов -->
+    <div id="storyModal" class="modal" style="display: none;">
+        <div class="modal-body" style="border-color: var(--neon-gold); box-shadow: 0 0 30px rgba(250, 204, 21, 0.3);">
+            <h3 id="storyTitle" style="color: var(--neon-gold);">📜 НОВАЯ ЭПОХА</h3>
+            <p id="storyDesc" style="font-size: 12px; color: #fff; line-height: 1.4; text-align: left;"></p>
+            <button class="sys-btn btn-gate" onclick="closeModal('storyModal')">Принять эволюцию мира</button>
+        </div>
+    </div>
+
+    <!-- Врата -->
+    <div id="gatesModal" class="modal" style="display: none;">
+        <div class="modal-body">
+            <h3>🌀 ВРАТА РАЗЛОМА</h3>
+            <div id="gatesList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+            <button class="sys-btn" style="background:#1e293b; border:none; padding:8px;" onclick="closeModal('gatesModal')">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Арена -->
+    <div id="arenaModal" class="modal" style="display: none;">
+        <div class="modal-body">
+            <h3>⚔️ АРЕНА ДУХОВНЫХ МАСТЕРОВ</h3>
+            <div style="background: #020617; padding: 10px; border-radius: 8px; font-size: 11px;">
+                <div>Ранг Арены: <span id="arenaRankText" style="color: var(--neon-gold);">Претендент</span></div>
+                <div style="color: var(--text-muted); margin-top: 2px;">Побед: <span id="arenaWins" style="color: #22c55e;">0</span></div>
+            </div>
+            <button class="sys-btn btn-gate" onclick="fightArena()">Начать бой на Арене (-10 энергии)</button>
+            <button class="sys-btn" style="background:#1e293b; border:none; padding:8px;" onclick="closeModal('arenaModal')">Назад</button>
+        </div>
+    </div>
+
+   <!-- База Академии -->
+    <div id="guildModal" class="modal" style="display: none;">
+        <div class="modal-body">
+            <h3>🏛️ БАЗА АКАДЕМИИ ШРЕК</h3>
+            <div style="background: #020617; padding: 10px; border-radius: 8px; font-size: 11px; text-align: left;">
+                <div>Уровень базы: <span id="guildLevel" style="color: var(--neon-purple);">1</span></div>
+            </div>
+            <button class="sys-btn btn-evolve" onclick="upgradeGuild()">Улучшить базу <span id="guildCost" style="color: var(--neon-blue);">[50 осколков]</span></button>
+            <button class="sys-btn" style="background:#1e293b; border:none; padding:8px;" onclick="closeModal('guildModal')">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- 🎒 ПОЛНОЭКРАННЫЙ ИНВЕНТАРЬ -->
+    <div id="inventoryView" style="
+        display: none; 
+        position: fixed; 
+        top: 0; left: 0; 
+        width: 100%; height: 100%; 
+        background: linear-gradient(rgba(10, 5, 15, 0.25), rgba(10, 5, 15, 0.25)), url('images/Fon.png') center center / cover no-repeat;backdrop-filter: blur(3px);
+        z-index: 1000; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: flex-start;
+        padding: 20px 15px;
+        box-sizing: border-box;">
+
+        <div style="
+            width: 100%; 
+            max-width: 400px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.3);">
+            
+            <h3 style="margin: 0; color: #f59e0b; font-size: 18px; font-weight: bold; text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);">
+                🎒 СУМКА ОХОТНИКА
+            </h3>
+          
+            
+            <button class="sys-btn" onclick="switchTab('main')" style="
+                width: auto; 
+                padding: 6px 14px; 
+                background: rgba(239, 68, 68, 0.2); 
+                border: 1px solid #ef4444; 
+                color: #fca5a5; 
+                font-size: 12px; 
+                border-radius: 6px;">
+                ✕ Закрыть
+            </button>
+        </div>
+
+
+
+
+<!-- ===== НАЧАЛО БЛОКА: ЭКИПИРОВКА ПЕРСОНАЖА ===== -->
+
+<!-- ПЕРВАЯ РАМКА: ЭКИПИРОВКА -->
+<div class="equipment-panel">
+
+    <div class="equipment-title">ЭКИПИРОВКА ПЕРСОНАЖА</div>
+
+    <div class="equipment-layout">
+
+        <!-- ЛЕВЫЕ 4 ЯЧЕЙКИ -->
+        <div class="equipment-side" id="gearLeft"></div>
+
+        <!-- ЦЕНТРАЛЬНАЯ ФОТОГРАФИЯ -->
+        <div class="character-display">
+
+            <div class="character-portrait" id="inventoryCharacterPortrait">
+                <span>⚔️</span>
+            </div>
+
+            <div class="character-name" id="inventoryCharacterName">
+                Охотник
+            </div>
+
+        </div>
+
+        <!-- ПРАВЫЕ 4 ЯЧЕЙКИ -->
+        <div class="equipment-side" id="gearRight"></div>
+
+    </div>
+
+</div>
+
+<!-- ВТОРАЯ РАМКА: ХАРАКТЕРИСТИКИ -->
+<div class="hero-stats" id="inventoryHeroStats">
+
+    <div class="hero-stat-row">
+        <span>⭐ Уровень</span>
+        <b id="invLevel">1</b>
+    </div>
+
+    <div class="hero-stat-row">
+        <span>🏅 Ранг</span>
+        <b id="invRank">E</b>
+    </div>
+
+    <div class="hero-stat-row">
+        <span>⚔️ Сила</span>
+        <b id="invPower">15</b>
+    </div>
+
+    <div class="hero-stat-row">
+        <span>⚡ Энергия</span>
+        <b id="invEnergy">100 / 100</b>
+    </div>
+
+    <div class="hero-stat-row">
+        <span>✨ Опыт</span>
+        <b id="invExp">0 / 100</b>
+    </div>
+
+    <div class="hero-stat-row">
+        <span>💎 Осколки</span>
+        <b id="invShards">0</b>
+    </div>
+
+    <div class="hero-stat-row">
+        <span>🔄 Перерождения</span>
+        <b id="invRebirth">0</b>
+    </div>
+
+</div>
+
+<!-- ===== КОНЕЦ БЛОКА: ЭКИПИРОВКА ПЕРСОНАЖА ===== -->
+
+
+
+
+
+<!-- ===== РЮКЗАК ===== -->
+<div class="backpack-heading">
+    🎒 РЮКЗАК
+    <span id="backpackCount" style="color:#94a3b8;font-weight:normal;">(0)</span>
+</div>
+
+<div id="inventoryList" style="
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 4px;
+">
+
+</div>
+
+</div> <!-- закрытие inventoryContent -->
+</div> <!-- закрытие inventoryView -->
+
+  
+<!-- ===== ОКНО ИНФОРМАЦИИ О ПРЕДМЕТЕ ===== -->
+<div id="itemDetailsModal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+">
+    <div style="
+        width: 100%;
+        max-width: 340px;
+        padding: 20px;
+        background: linear-gradient(145deg, #1e1b35, #080b18);
+        border: 1px solid #a78bfa;
+        border-radius: 14px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.35);
+    ">
+        <h3 id="detailItemName">Название предмета</h3>
+        <div id="detailItemImage" style="font-size: 55px; margin: 15px;"></div>
+        <div id="detailItemStats" style="text-align: left; margin: 15px 0;"></div>
+
+        <button class="sys-btn" id="detailEquipBtn">Надеть / Использовать</button>
+        <button class="sys-btn" id="detailSellBtn">Продать</button>
+        <button class="sys-btn" onclick="closeItemDetails()">Закрыть</button>
+    </div>
+</div>
+<!-- ===== КОНЕЦ ОКНА ИНФОРМАЦИИ ===== -->
+
+  
+<div class="container">
+        <!-- Баннер Эпохи -->
+        <div class="epoch-banner" id="epochBanner">
+            <div>
+                <div class="epoch-title" id="epochName">Акт I: Пробуждение</div>
+                <div class="epoch-sub" id="epochDescSub">Эпоха Академии Шрек (Ур. 1-30)</div>
+            </div>
+            <div style="font-size: 16px;" id="epochIcon"></div>
+        </div>
+
+        <!-- Шапка с динамическими Кольцами -->
+        <div class="sys-header">
+            <div class="avatar-wrapper">
+                <div class="ring-orbit ring-1" id="ring1"></div>
+                <div class="ring-orbit ring-2" id="ring2"></div>
+                <div class="ring-orbit ring-3" id="ring3"></div>
+                <div class="ring-orbit ring-4" id="ring4"></div>
+                <div class="avatar-box" id="avatarIcon"></div>
+            </div>
+            <div class="header-info">
+                <h2 id="heroNameHeader">Охотник</h2>
+                <div class="rank-tag" id="rankText">Уровень 1: Ученик</div>
+                <div class="ability-tag" id="heroAbilityText">Система: Активна</div>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <div class="quick-nav">
+            <button onclick="openModal('arenaModal')">⚔️ Арена</button>
+            <button onclick="openModal('guildModal')">🏠 База</button>
+            <button onclick="switchTab('inventory')">🎒 Сумка</button>
+            <button onclick="openShopModal()">🛒 Магазин</button>
+        </div>
+
+        <!-- Статы -->
+        <div class="stats-panel">
+            <div class="stat-line">
+                <span>Энергия Системы:</span>
+                <span id="energyText" style="color: #4ade80;">100 / 100</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill energy-fill" id="energyBar"></div>
+            </div>
+
+            <div class="stat-line" style="margin-top: 4px;">
+                <span>Опыт Культивации:</span>
+                <span id="expText" style="color: var(--neon-blue);">0 / 100</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="expBar"></div>
+            </div>
+
+            <div class="grid-stats">
+                <div class="stat-line"><span>Атака:</span> <span id="powerText" style="color: var(--neon-gold);">15</span></div>
+                <div class="stat-line"><span>Осколки:</span> <span id="shardsText" style="color: var(--neon-blue);">0</span></div>
+                <div class="stat-line"><span>Артефакт:</span> <span id="equippedBone" style="max-width: 75px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Нет</span></div>
+                <div class="stat-line"><span>Перерождение:</span> <span id="rebirthCountText" style="color: var(--accent-red);">0</span></div>
+            </div>
+        </div>
+
+        <!-- Действия -->
+        <div class="actions-box">
+            <div class="section-header">Рейды и Разломы</div>
+            <button class="sys-btn btn-gate" onclick="openGatesModal()">🌀 Войти в Врата Разлома (E - SSS)</button>
+            <button class="sys-btn btn-meditate" onclick="meditate()">🧘 Медитация Духа <small>(+Опыт, +Энергия)</small></button>
+            
+            <button class="sys-btn" onclick="addTestItem()">🎁 [ТЕСТ] Получить предмет</button>
+            
+            <div class="section-header" style="margin-top: 4px;">Прогрессия Системы</div>
+            <button class="sys-btn btn-evolve" onclick="evolveHero()">✨ Эволюция Боевого Духа <small>(50 ур.)</small></button>
+            <button class="sys-btn" style="background:#1e3a8a; border:none;" onclick="claimBonus()">🎁 Ежедневный Дар Системы</button>
+            <button class="sys-btn btn-rebirth" id="rebirthBtn" onclick="rebirth()">🌀 Врата Перерождения <small>(Сброс ради x2)</small></button>
+        </div>
+
+        <!-- Лог -->
+        <div class="log-terminal" id="logBox">
+            <div class="log-row">[СИСТЕМА]: Преемственность поколений активирована. Добро пожаловать во Врата!</div>
+        </div>
+
+        <!-- Дев Панель -->
+        <div style="display: flex; gap: 6px;">
+            <button class="sys-btn" style="flex: 1; background: #1e1b4b; border: 1px dashed var(--neon-purple); font-size: 10px; padding: 6px;" onclick="fastTestLevel99()">⚡ [ТЕСТ] 99 Уровень</button>
+            <button class="sys-btn" style="flex: 1; background: #020617; border: 1px solid #334155; color: #64748b; font-size: 10px; padding: 6px;" onclick="resetGame()">🔄 Сброс</button>
+        </div>
+    </div>
+
+<!-- ===== ОКНО ПОДТВЕРЖДЕНИЯ СБРОСА ===== -->
+<div id="resetModal" class="reset-modal">
+    <div class="reset-modal-box">
+
+        <div class="reset-icon">⚠️</div>
+
+        <div class="reset-title">СБРОС ПЕРСОНАЖА</div>
+
+        <div class="reset-description">
+            Ты действительно хочешь сбросить игровой прогресс?
+            <br><br>
+            <span>Все сохранённые игровые данные будут удалены.</span>
+        </div>
+
+        <div class="reset-buttons">
+            <button class="reset-confirm" onclick="confirmResetGame()">
+                ПОДТВЕРДИТЬ
+            </button>
+
+            <button class="reset-cancel" onclick="closeResetModal()">
+                ОТМЕНА
+            </button>
+        </div>
+
+    </div>
+</div>
+
+    <div id="customToast" role="status" aria-live="polite">Уведомление</div>
+
+    <!-- Модальное окно Магазина Снаряжения -->
+    <div id="shop-modal" class="shop-modal">
+      <div class="shop-content">
+        <div class="shop-header">
+          <h2>Магазин Снаряжения</h2>
+          <div class="currency-display">Монеты: <span id="user-coins">1000</span> 🪙</div>
+          <button onclick="closeShopModal()" class="sys-btn" style="padding:6px 10px; width:auto;">← Назад</button>
+        </div>
+        
+        <div style="color:#94a3b8;font-size:11px;margin:0 0 10px;">Экипировка: голова · броня · оружие · обувь · амулет · кольцо · щит · артефакт</div>
+        <div class="shop-grid">
+          <div class="shop-item">
+            <div class="item-icon-box item-scorpion"></div>
+            <h3>Шлем Скорпиона</h3>
+            <p class="item-desc">+15% ментальная сила</p>
+            <button class="buy-btn" onclick="buyShopItem('Шлем Скорпиона', 250)">Купить (250 🪙)</button>
+          </div>
+
+          <div class="shop-item">
+            <div class="item-icon-box item-wings"></div>
+            <h3>Доспех Бабочки</h3>
+            <p class="item-desc">+20% скорость</p>
+            <button class="buy-btn" onclick="buyShopItem('Доспех Бабочки', 300)">Купить (300 🪙)</button>
+          </div>
+
+          <div class="shop-item">
+            <div class="item-icon-box item-cannon"></div>
+            <h3>Духовная Пушка</h3>
+            <p class="item-desc">+50 урон</p>
+            <button class="buy-btn" onclick="buyShopItem('Духовная Пушка', 500)">Купить (500 🪙)</button>
+          </div>
+
+          <div class="shop-item">
+            <div class="item-icon-box item-shield"></div>
+            <h3>Щит Черепахи</h3>
+            <p class="item-desc">+40% броня</p>
+            <button class="buy-btn" onclick="buyShopItem('Щит Черепахи', 400)">Купить (400 🪙)</button>
+          </div>
+          <div class="shop-item">
+            <div class="item-icon-box item-boots"></div>
+            <h3>Сапоги Следопыта</h3>
+            <p class="item-desc">+18 сила · слот обуви</p>
+            <button class="buy-btn" onclick="buyShopItem('Сапоги Следопыта', 220)">Купить (220 🪙)</button>
+          </div>
+          <div class="shop-item">
+            <div class="item-icon-box item-necklace"></div>
+            <h3>Ожерелье Духа</h3>
+            <p class="item-desc">+22 сила · слот амулета</p>
+            <button class="buy-btn" onclick="buyShopItem('Ожерелье Духа', 280)">Купить (280 🪙)</button>
+          </div>
+          <div class="shop-item">
+            <div class="item-icon-box item-ring"></div>
+            <h3>Кольцо Звёзд</h3>
+            <p class="item-desc">+25 сила · слот кольца</p>
+            <button class="buy-btn" onclick="buyShopItem('Кольцо Звёзд', 320)">Купить (320 🪙)</button>
+          </div>
+          <div class="shop-item">
+            <div class="item-icon-box item-artifact"></div>
+            <h3>Кристалл Артефакта</h3>
+            <p class="item-desc">+35 сила · слот артефакта</p>
+            <button class="buy-btn" onclick="buyShopItem('Кристалл Артефакта', 450)">Купить (450 🪙)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        let player = {
+            level: 1,
+            exp: 0,
+            energy: 100,
+            maxExp: 100,
+            maxEnergy: 100,
+            power: 15,
+            shards: 0,
+            heroKey: "",
+            heroName: "",
+            heroIcon: "",
+            heroAura: "#38bdf8",
+            abilityDesc: "",
+            isEvolved: false,
+            arenaWins: 0,
+            guildLevel: 1,
+            inventory: [],
+            equipped: { bone: null, weapon: null },
+            equippedGear: {},
+            rebirthCount: 0,
+            lastBonusTime: 0,
+            currentEpoch: 1,
+            coins: 1000
+        };
+
+// ================================================
+// 7 ПЕРСОНАЖЕЙ — ПОРЯДОК НА ОБЩЕЙ ФОТОГРАФИИ
+// Верхний ряд: 4 персонажа
+// Нижний ряд: 3 персонажа
+// ================================================
+const HEROES_IMAGE = 'images/heroes.png';
+const heroes = [
+
+    // ===== ВЕРХНИЙ РЯД =====
+
+    {
+        key: 'sanshi',
+        name: 'Сюй Саньши',
+        icon: 'images/07.png',
+        gearImage: 'images/gear_01.png',
+        imageRow: 0,
+        imageCol: 0,
+        aura: '#a855f7',
+        power: 21,
+        ability: 'Черепаха: Защита и крит. удары.'
+    },
+
+    {
+        key: 'xiaoxiao',
+        name: 'Сяо Сяо',
+        icon: 'images/06.png',
+        gearImage: 'images/gear_02.png',
+        imageRow: 0,
+        imageCol: 1,
+        aura: '#f97316',
+        power: 22,
+        ability: 'Пагода: Сбор осколков Бездны.'
+    },
+
+    {
+        key: 'beibei',
+        name: 'Бей Бей',
+        icon: 'images/03.png',
+        gearImage: 'images/gear_03.png',
+        imageRow: 0,
+        imageCol: 2,
+        aura: '#facc15',
+        power: 26,
+        ability: 'Синий Дракон: Огромный урон в рейдах.'
+    },
+
+    {
+        key: 'wangdong',
+        name: 'Ван Дун',
+        icon: 'images/02.png',
+        gearImage: 'images/gear_04.png',
+        imageRow: 0,
+        imageCol: 3,
+        aura: '#f43f5e',
+        power: 20,
+        ability: 'Бабочка: Удвоенный шанс реликвии.'
+    },
+
+
+    // ===== НИЖНИЙ РЯД =====
+
+    {
+        key: 'yuhao',
+        name: 'Хо Юйхао',
+        icon: 'images/01.png',
+        gearImage: 'images/gear_05.png',
+        imageRow: 1,
+        imageCol: 0,
+        aura: '#38bdf8',
+        power: 25,
+        ability: 'Глаз Духа: Ментальный бонус во Вратах.'
+    },
+
+    {
+        key: 'nannan',
+        name: 'Цзян Наньнань',
+        icon: 'images/05.png',
+        gearImage: 'images/gear_06.png',
+        imageRow: 1,
+        imageCol: 1,
+        aura: '#c084fc',
+        power: 14,
+        ability: 'Кролик: Дешевые улучшения и опыт.'
+    },
+
+    {
+        key: 'caitou',
+        name: 'Хэ Цайтоу',
+        icon: 'images/04.png',
+        gearImage: 'images/gear_07.png',
+        imageRow: 1,
+        imageCol: 2,
+        aura: '#22c55e',
+        power: 12,
+        ability: 'Духовный Механизм: Регенерация энергии.'
+    }
+
+];
+
+
+
+      
+        const ranks = [
+            "Уровень 1-10: Охотник E-Ранга", "Уровень 11-20: Охотник D-Ранга",
+            "Уровень 21-30: Охотник C-Ранга", "Уровень 31-40: Охотник B-Ранга",
+            "Уровень 41-50: Охотник A-Ранга", "Уровень 51-60: Охотник S-Ранга",
+            "Уровень 61-70: Монарх Теней", "Уровень 71-80: 🌟 Бог Света",
+            "Уровень 81-90: ⚡ Бог Асура", "Уровень 91-99: 👑 Бог Континента"
+        ];
+
+        const gates = [
+            { rank: 'E', minLevel: 1, energyCost: 15, reqPower: 15, exp: 50, shards: 5, name: 'Врата Обезьян' },
+            { rank: 'D', minLevel: 10, energyCost: 20, reqPower: 60, exp: 120, shards: 15, name: 'Врата Волка Фантома' },
+            { rank: 'C', minLevel: 25, energyCost: 25, reqPower: 180, exp: 300, shards: 35, name: 'Врата Ядовитого Паука' },
+            { rank: 'B', minLevel: 40, energyCost: 30, reqPower: 450, exp: 700, shards: 70, name: 'Врата Ледяного Дракона' },
+            { rank: 'A', minLevel: 60, energyCost: 40, reqPower: 1100, exp: 1500, shards: 150, name: 'Врата Огненного Демона' },
+            { rank: 'S', minLevel: 80, energyCost: 50, reqPower: 2800, exp: 3500, shards: 300, name: 'Врата Древнего Титана' },
+            { rank: 'SSS', minLevel: 95, energyCost: 60, reqPower: 6500, exp: 10000, shards: 1000, name: 'Врата Бога Бездны' }
+        ];
+
+        function loadGame() {
+            try {
+                let saved = localStorage.getItem('reborn_douluo_v4');
+                if (saved) {
+                    let parsed = JSON.parse(saved);
+                    player = Object.assign({}, player, parsed);
+                    if (!player.inventory) player.inventory = [];
+                    if (!player.equipped) player.equipped = { bone: null, weapon: null };
+                    if (!player.equippedGear) player.equippedGear = {};
+                    if (player.coins === undefined) player.coins = 1000;
+                    player.maxExp = Math.max(100, Number(player.maxExp) || 100);
+                    player.maxEnergy = Math.max(1, Number(player.maxEnergy) || 100);
+                    player.energy = Math.min(Math.max(0, Number(player.energy) || 0), player.maxEnergy);
+                    log("Данные Системы загружены.");
+                }
+            } catch (e) {
+                console.error("Ошибка загрузки:", e);
+            }
+
+            // ===== ВОССТАНОВЛЕНИЕ ФОТОГРАФИИ ЭКИПИРОВКИ =====
+if (player.heroKey) {
+    updateEquipmentCharacterBackground();
+} else {
+    showHeroSelection();
+}
+        }
+
+        function saveGame() {
+            try {
+                localStorage.setItem('reborn_douluo_v4', JSON.stringify(player));
+            } catch (e) {
+                console.error("Ошибка сохранения:", e);
+            }
+        }
+
+        
+// ===== УПРАВЛЕНИЕ СБРОСОМ ПЕРСОНАЖА =====
+
+function resetGame() {
+    const modal = document.getElementById('resetModal');
+
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+// Закрытие окна
+function closeResetModal() {
+    const modal = document.getElementById('resetModal');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Подтверждение сброса
+function confirmResetGame() {
+    localStorage.removeItem('reborn_douluo_v4');
+    location.reload();
+}
+
+
+        
+
+// ===== ВЫБОР ПЕРСОНАЖА ИЗ ОБЩЕЙ ФОТОГРАФИИ =====
+function showHeroSelection() {
+    let list = document.getElementById('heroList');
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    // Индивидуальные поправки положения персонажей
+    const heroOffsets = {
+        sanshi:  { x: 10, y: 0 },   // 1 — немного влево
+        xiaoxiao:{ x: 0,  y: 0 },   // 2 — без изменений
+        beibei:  { x: 0,  y: 0 },   // 3 — без изменений
+        wangdong:{ x: 0,  y: 0 },   // 4 — без изменений
+        yuhao:   { x: 10, y: -18 },   // 5 — влево и вниз
+        nannan:  { x: 15,y: -18 },   // 6 — сильно влево
+        caitou:  { x: 22,y: -18 }    // 7 — сильно влево
+    };
+
+    heroes.forEach((h) => {
+        let btn = document.createElement('div');
+        btn.className = 'hero-option';
+        btn.style.borderLeft = `4px solid ${h.aura}`;
+
+        // Базовые координаты персонажа
+        let x = (h.imageCol / 3) * 100;
+        let y = h.imageRow * 100;
+
+        // Добавляем индивидуальное смещение
+        let offset = heroOffsets[h.key] || { x: 0, y: 0 };
+        x += offset.x;
+        y += offset.y;
+
+        btn.innerHTML = `
+            <div style="
+                width: 40px;
+                min-width: 40px;
+                height: 40px;
+                flex: 0 0 40px;
+                border-radius: 50%;
+                overflow: hidden;
+                border: 2px solid ${h.aura};
+                box-sizing: border-box;
+            ">
+                <div style="
+                    width: 100%;
+                    height: 100%;
+                    background-image: url('${HEROES_IMAGE}');
+                    background-size: 400% 200%;
+                    background-position: ${x}% ${y}%;
+                    background-repeat: no-repeat;
+                "></div>
+            </div>
+
+            <div>
+                <div style="font-size: 13px; font-weight: bold; color: ${h.aura}">
+                    ${h.name}
+                </div>
+
+                <div style="color: var(--text-muted); font-size: 10px;">
+                    ${h.ability}
+                </div>
+
+                <div style="color: var(--neon-gold); font-size: 10px; margin-top: 2px;">
+                    Начальная сила: ${h.power}
+                </div>
+            </div>
+        `;
+
+        btn.onclick = () => selectHero(h);
+        list.appendChild(btn);
+    });
+
+    let modal = document.getElementById('heroModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+      // ===== ИНДИВИДУАЛЬНЫЕ НАСТРОЙКИ ФОТОГРАФИЙ ЭКИПИРОВКИ =====
+const equipmentImageSettings = {
+
+    sanshi:   { x: 0, y: 0, zoom: 1 },
+    xiaoxiao: { x: 0, y: 0, zoom: 1 },
+    beibei:   { x: 0, y: 0, zoom: 1 },
+    wangdong: { x: 0, y: 0, zoom: 1 },
+    yuhao:    { x: 0, y: 0, zoom: 1 },
+    nannan:   { x: 0, y: 0, zoom: 1 },
+    caitou:   { x: 0, y: 0, zoom: 1 }
+
+};
+      
+
+// ===== ЯРКАЯ ФОТОГРАФИЯ ПЕРСОНАЖА В ЭКИПИРОВКЕ =====
+function updateEquipmentCharacterBackground() {
+
+    // Находим панель экипировки
+    const panel = document.querySelector('.equipment-panel');
+    if (!panel) return;
+
+    // Находим выбранного персонажа
+    const hero = heroes.find(h => h.key === player.heroKey);
+    if (!hero || !hero.gearImage) return;
+
+    // Устанавливаем фотографию БЕЗ тёмного слоя
+    panel.style.setProperty(
+        'background-image',
+        `url("${hero.gearImage}")`,
+        'important'
+    );
+
+    // Размер фотографии
+    panel.style.setProperty(
+        'background-size',
+        'auto 100%',
+        'important'
+    );
+
+    // Положение фотографии
+    panel.style.setProperty(
+        'background-position',
+        'center top',
+        'important'
+    );
+
+    // Запрещаем повторение фотографии
+    panel.style.setProperty(
+        'background-repeat',
+        'no-repeat',
+        'important'
+    );
+}
+
+      
+// ===== ВЫБОР ПЕРСОНАЖА =====
+function selectHero(h) {
+
+    // Сохраняем данные выбранного героя
+    player.heroKey = h.key;
+    player.heroName = h.name;
+    player.heroIcon = h.icon;
+    player.heroAura = h.aura;
+    player.power = h.power;
+    player.abilityDesc = h.ability;
+
+    // Устанавливаем отдельную фотографию экипировки
+    updateEquipmentCharacterBackground();
+
+    // Закрываем окно выбора персонажа
+    let modal = document.getElementById('heroModal');
+
+    if (modal) modal.style.display = 'none';
+
+    // Сохраняем прогресс
+    log(`[СИСТЕМА]: Синхронизация с ${h.name} завершена.`);
+
+    saveGame();
+    updateUI();
+}
+
+
+        function fastTestLevel99() {
+            player.level = 99;
+            player.exp = 0;
+            player.maxExp = 99999;
+            player.power += 5000;
+            player.shards += 5000;
+            player.energy = 100;
+            checkEpochProgression();
+            log("⚡ [ДЕВ]: Активирован 99 уровень!");
+            saveGame();
+            updateUI();
+        }
+
+        function openModal(id) {
+            let el = document.getElementById(id);
+            if (el) el.style.display = 'flex';
+            if (id === 'arenaModal') updateArenaUI();
+            if (id === 'guildModal') updateGuildUI();
+        }
+
+        function closeModal(id) {
+            let el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        }
+
+        // Функции управления магазином монет
+        // Открыть магазин как отдельную вкладку, не как всплывающее окно
+        function openShopModal() {
+            switchTab('shop');
+        }
+
+        // Вернуться из магазина на главный экран
+        function closeShopModal() {
+            switchTab('main');
+        }
+
+        
+// ===== ПОКУПКА ПРЕДМЕТОВ В ЛАВКЕ =====
+function buyShopItem(itemName, price) {
+
+    // Каталог предметов и пути к их изображениям
+    const catalog = {
+        'Шлем Скорпиона': {
+            type: 'shop',
+            power: 15,
+            icon: '🦂',
+            image: 'images/helmet_scorpion.png',
+            shopClass: 'item-scorpion',
+            description: '+15% ментальная сила'
+        },
+
+        'Доспех Бабочки': {
+            type: 'shop',
+            power: 20,
+            icon: '🦋',
+            image: 'images/armor_butterfly.png',
+            shopClass: 'item-wings',
+            description: '+20% скорость'
+        },
+
+        'Духовная Пушка': {
+            type: 'shop',
+            power: 50,
+            icon: '💥',
+            image: 'images/spirit_cannon.png',
+            shopClass: 'item-cannon',
+            description: '+50 урон'
+        },
+
+        'Щит Черепахи': {
+            type: 'shop',
+            power: 40,
+            icon: '🛡️',
+            image: 'images/shield_turtle.png',
+            shopClass: 'item-shield',
+            description: '+40% броня'
+        },
+
+        'Сапоги Следопыта': {
+            type: 'shop',
+            power: 18,
+            icon: '🥾',
+            image: 'images/boots_tracker.png',
+            shopClass: 'item-boots',
+            description: '+18 сила · обувь'
+        },
+
+        'Ожерелье Духа': {
+            type: 'shop',
+            power: 22,
+            icon: '📿',
+            image: 'images/necklace_spirit.png',
+            shopClass: 'item-necklace',
+            description: '+22 сила · амулет'
+        },
+
+        'Кольцо Звёзд': {
+            type: 'shop',
+            power: 25,
+            icon: '💍',
+            image: 'images/ring_stars.png',
+            shopClass: 'item-ring',
+            description: '+25 сила · кольцо'
+        },
+
+        'Кристалл Артефакта': {
+            type: 'shop',
+            power: 35,
+            icon: '🔮',
+            image: 'images/crystal_artifact.png',
+            shopClass: 'item-artifact',
+            description: '+35 сила · артефакт'
+        }
+    };
+
+    // Получаем данные выбранного предмета
+    const details = catalog[itemName];
+
+    if (!details) {
+        showToast('Этот предмет пока недоступен.');
+        return;
+    }
+
+    // Проверяем наличие инвентаря
+    if (!Array.isArray(player.inventory)) {
+        player.inventory = [];
+    }
+
+    // Проверяем количество монет
+    if ((Number(player.coins) || 0) < price) {
+        showToast('Недостаточно монет для покупки!');
+        return;
+    }
+
+    // Списываем монеты
+    player.coins -= price;
+
+    // Добавляем предмет с отдельной фотографией
+    player.inventory.push({
+        name: itemName,
+        type: details.type,
+        power: details.power,
+        icon: details.icon,
+        image: details.image,
+        shopClass: details.shopClass,
+        description: details.description,
+        sellPrice: Math.max(1, Math.floor(price * 0.5))
+    });
+
+    // Сохраняем игру и обновляем интерфейс
+    saveGame();
+    updateUI();
+    renderInventory();
+
+    showToast(`Куплено: ${itemName}. Предмет добавлен в инвентарь!`);
+}
+
+      
+        function openGatesModal() {
+            let list = document.getElementById('gatesList');
+            if (!list) return;
+            list.innerHTML = "";
+            gates.forEach(g => {
+                let div = document.createElement('div');
+                div.className = 'gate-item-card';
+                let isLocked = player.level < g.minLevel;
+                div.innerHTML = `
+                    <span class="gate-rank-badge badge-${g.rank}">${g.rank}</span>
+                    <div style="flex-grow: 1;">
+                        <div style="font-weight: bold; font-size: 12px; color: #fff;">${g.name}</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">Треб. Сила: ${g.reqPower} | Энергия: -${g.energyCost}</div>
+                    </div>
+                    <button class="sys-btn" style="padding: 6px 10px; font-size: 10px; background: ${isLocked ? '#1e293b' : 'var(--neon-blue)'}; color: ${isLocked ? '#64748b' : '#000'}; border:none;" 
+                        onclick="clearGate('${g.rank}')" ${isLocked ? 'disabled' : ''}>
+                        ${isLocked ? `Lvl ${g.minLevel}` : 'Рейд'}
+                    </button>
+                `;
+                list.appendChild(div);
+            });
+            openModal('gatesModal');
+        }
+
+        function clearGate(rank) {
+            let g = gates.find(gate => gate.rank === rank);
+            if (!g || player.energy < g.energyCost) {
+                log("❌ Недостаточно энергии!");
+                return;
+            }
+            player.energy -= g.energyCost;
+            let mult = player.rebirthCount + 1;
+
+            let effectivePower = player.power;
+            if (player.heroKey === 'tang_san' || player.heroKey === 'dai_mubai') effectivePower *= 1.25;
+
+            if (effectivePower >= g.reqPower) {
+                let expBonus = (player.heroKey === 'ning_rongrong') ? 1.3 : 1.0;
+                let gainedExp = Math.floor(g.exp * mult * expBonus);
+                let shardsBonus = (player.heroKey === 'ma_hongjun') ? 1.4 : 1.0;
+                let gainedShards = Math.floor(g.shards * mult * shardsBonus);
+                
+                player.exp += gainedExp;
+                player.shards += gainedShards;
+                const gainedCoins = (30 + Math.max(0, Number(g.minLevel) || 1) * 2) * mult;
+                player.coins = (Number(player.coins) || 0) + gainedCoins;
+                log(`🎉 [ВРАТА ${g.rank}]: +${gainedExp} опыта, +${gainedShards} осколков, +${gainedCoins} монет.`);
+
+                let dropChance = (player.heroKey === 'xiao_wu') ? 0.55 : 0.35;
+                if (Math.random() < dropChance) {
+                    let rName = `🦴 Реликвия Врат (${g.rank})`;
+                    player.inventory.push({ type: 'bone', name: rName, power: g.reqPower * 0.4 });
+                    log(`⚡ [ЛУТ]: Найдена ${rName}!`);
+                }
+            } else {
+                log(`❌ [ПОРАЖЕНИЕ]: Силы недостаточно для Врат ${g.rank}!`);
+            }
+            checkLevelUp();
+            saveGame();
+            updateUI();
+            closeModal('gatesModal');
+        }
+
+function updateArenaUI() {
+            let winsEl = document.getElementById('arenaWins');
+            let rankEl = document.getElementById('arenaRankText');
+            if (winsEl) winsEl.innerText = player.arenaWins;
+            if (rankEl) rankEl.innerText = player.arenaWins > 20 ? "Лорд Арены" : player.arenaWins > 10 ? "Ветеран" : "Претендент";
+        }
+
+        function fightArena() {
+            if (player.energy < 10) {
+                log("❌ Недостаточно энергии.");
+                return;
+            }
+            player.energy -= 10;
+            let enemyPower = 35 + player.level * 14;
+            let mult = player.rebirthCount + 1;
+
+            if (player.power >= enemyPower) {
+                player.arenaWins++;
+                let rewardShards = 25 * mult;
+                const rewardCoins = 60 * mult;
+                player.shards += rewardShards;
+                player.coins = (Number(player.coins) || 0) + rewardCoins;
+                log(`⚔️ [АРЕНА]: Победа! +${rewardShards} осколков и +${rewardCoins} монет.`);
+            } else {
+                log(`⚔️ [АРЕНА]: Поражение.`);
+            }
+            saveGame();
+            updateUI();
+            updateArenaUI();
+        }
+
+        function updateGuildUI() {
+            let lvlEl = document.getElementById('guildLevel');
+            let costEl = document.getElementById('guildCost');
+            if (lvlEl) lvlEl.innerText = player.guildLevel;
+            let cost = player.guildLevel * 40;
+            if (player.heroKey === 'ning_rongrong') cost = Math.floor(cost * 0.8);
+            if (costEl) costEl.innerText = `[${cost} осколков]`;
+        }
+
+        function upgradeGuild() {
+            let cost = player.guildLevel * 40;
+            if (player.heroKey === 'ning_rongrong') cost = Math.floor(cost * 0.8);
+
+            if (player.shards >= cost) {
+                player.shards -= cost;
+                player.guildLevel++;
+                player.power += 30 * (player.rebirthCount + 1);
+                log(`🏛️ [БАЗА]: Уровень повышен до ${player.guildLevel}!`);
+                saveGame();
+                updateUI();
+                updateGuildUI();
+            } else {
+                log(`❌ Недостаточно осколков.`);
+            }
+        }
+
+        function evolveHero() {
+            if (player.level >= 50 && !player.isEvolved) {
+                player.isEvolved = true;
+                player.power += 400 * (player.rebirthCount + 1);
+                player.heroName = `👑 Бог (${player.heroName})`;
+                log(`✨ [ЭВОЛЮЦИЯ]: Божественная форма достигнута!`);
+                saveGame();
+                updateUI();
+            } else if (player.isEvolved) {
+                log(`ℹ️ Герой уже эволюционировал.`);
+            } else {
+                log(`❌ Требуется 50 уровень.`);
+            }
+        }
+
+        function switchTab(tabName) {
+            const invView = document.getElementById('inventoryView');
+            const shopView = document.getElementById('shop-modal');
+            const mainView = document.querySelector('.container');
+            if (invView) invView.style.display = tabName === 'inventory' ? 'flex' : 'none';
+            if (shopView) shopView.style.display = tabName === 'shop' ? 'flex' : 'none';
+            if (mainView) mainView.style.display = tabName === 'main' ? 'flex' : 'none';
+            if (tabName === 'inventory') renderInventory();
+            if (tabName === 'shop') updateUI();
+        }
+
+        function renderEquipment() {
+            const left = document.getElementById('gearLeft');
+            const right = document.getElementById('gearRight');
+            const portrait = document.getElementById('inventoryCharacterPortrait');
+            const name = document.getElementById('inventoryCharacterName');
+            if (!left || !right || !portrait || !name) return;
+            if (!player.equippedGear) player.equippedGear = {};
+            const slots = [
+                {key:'head', label:'Голова', side:'left', fallback:'🪖'},
+                {key:'armor', label:'Броня', side:'left', fallback:'🦋'},
+                {key:'weapon', label:'Оружие', side:'left', fallback:'⚔️'},
+                {key:'boots', label:'Обувь', side:'left', fallback:'🥾'},
+                {key:'necklace', label:'Амулет', side:'right', fallback:'📿'},
+                {key:'ring', label:'Кольцо', side:'right', fallback:'💍'},
+                {key:'shield', label:'Щит', side:'right', fallback:'🛡️'},
+                {key:'artifact', label:'Артефакт', side:'right', fallback:'🔮'}
+            ];
+            left.innerHTML = ''; right.innerHTML = '';
+            slots.forEach(slot => {
+                const item = player.equippedGear[slot.key];
+                const el = document.createElement('div');
+                el.className = 'gear-slot' + (item ? ' filled' : '');
+                const icon = document.createElement('div');
+                icon.className = 'gear-icon';
+                if (item && item.shopClass) {
+                    icon.style.backgroundImage = "url('images/5.0.png')";
+                    icon.classList.add(item.shopClass);
+                } else if (item && (item.image || item.iconPath)) {
+                    const img = document.createElement('img');
+                    img.src = item.image || item.iconPath;
+                    img.alt = item.name || slot.label;
+                    img.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+                    img.onerror = function(){ this.remove(); icon.textContent = item.icon || slot.fallback; };
+                    icon.appendChild(img);
+                } else icon.textContent = item ? (item.icon || slot.fallback) : '·';
+                const label = document.createElement('div'); label.className = 'gear-label'; label.textContent = slot.label;
+                el.append(icon, label);
+                if (item) {
+                    const itemName = document.createElement('div'); itemName.className = 'gear-name'; itemName.textContent = item.name || 'Предмет'; el.appendChild(itemName);
+                    el.title = 'Нажми, чтобы снять: ' + item.name;
+                    el.style.cursor = 'pointer';
+                    el.addEventListener('click', () => unequipGear(slot.key));
+                }
+                (slot.side === 'left' ? left : right).appendChild(el);
+            });
+            portrait.innerHTML = '';
+            const heroImg = document.createElement('img');
+            heroImg.src = player.heroIcon || 'images/icon_01_01.png';
+            heroImg.alt = player.heroName || 'Персонаж';
+            heroImg.onerror = function(){ portrait.innerHTML = '<span style="font-size:54px">⚔️</span>'; };
+            portrait.appendChild(heroImg);
+            name.textContent = player.heroName || 'Охотник';
+        }
+
+        
+// ===== ОТРИСОВКА РЮКЗАКА И ОТКРЫТИЕ ПРЕДМЕТОВ =====
+function renderInventory() {
+    const inventoryList = document.getElementById('inventoryList');
+    if (!inventoryList) return;
+
+    inventoryList.classList.add('inventory-grid');
+    inventoryList.style.display = 'flex';
+    inventoryList.style.flexDirection = 'row';
+    inventoryList.style.flexWrap = 'wrap';
+    inventoryList.style.maxHeight = 'none';
+    inventoryList.style.overflow = 'visible';
+    inventoryList.innerHTML = '';
+
+    const items = Array.isArray(player.inventory) ? player.inventory : [];
+    const count = document.getElementById('backpackCount');
+
+    if (count) count.textContent = '(' + items.length + ')';
+
+    renderEquipment();
+
+    if (items.length === 0) {
+        inventoryList.innerHTML =
+            '<div class="empty-backpack">Рюкзак пуст. Купи или найди предмет, и он появится здесь.</div>';
+        return;
+    }
+
+    items.forEach((item, index) => {
+        const slot = document.createElement('div');
+        slot.className = 'inventory-slot has-item';
+        slot.setAttribute('aria-label', item.name || 'Предмет');
+        slot.style.cursor = 'pointer';
+
+        // Изображение предмета
+        const iconWrap = document.createElement('div');
+        iconWrap.className = 'item-image-wrap';
+
+        if (item.shopClass) {
+            iconWrap.style.backgroundImage = "url('images/5.0.png')";
+            iconWrap.classList.add(item.shopClass);
+        }
+
+        const imagePath = typeof item.image === 'string' && item.image.trim()
+            ? item.image.trim()
+            : (item.iconPath || '');
+
+        if (imagePath && !item.shopClass) {
+            const img = document.createElement('img');
+            img.className = 'inventory-item-image';
+            img.src = imagePath.startsWith('images/')
+                ? imagePath
+                : 'images/' + imagePath.replace(/^\/+/, '');
+            img.alt = item.name || 'Предмет';
+
+            img.onerror = function () {
+                this.remove();
+                iconWrap.textContent = item.icon || '🔮';
+                iconWrap.classList.add('item-fallback-icon');
+            };
+
+            iconWrap.appendChild(img);
+        } else if (!item.shopClass) {
+            iconWrap.textContent = item.icon || '🔮';
+            iconWrap.classList.add('item-fallback-icon');
+        }
+
+        // Название и сила
+        const itemName = document.createElement('div');
+        itemName.className = 'inventory-item-name';
+        itemName.textContent = item.name || 'Предмет';
+
+        const power = document.createElement('div');
+        power.className = 'inventory-item-power';
+        power.textContent = item.power
+            ? '+' + item.power + ' силы'
+            : (item.type || 'Предмет');
+
+        slot.append(iconWrap, itemName, power);
+
+        // Кнопки действий
+        const actions = document.createElement('div');
+        actions.className = 'inventory-item-actions';
+
+        const action = document.createElement('button');
+        action.className = 'inventory-item-action';
+        action.type = 'button';
+        action.textContent =
+            item.shopClass || item.type === 'bone'
+                ? 'Надеть'
+                : 'Использовать';
+
+        action.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            if (item.shopClass) equipShopItem(index);
+            else if (item.type === 'bone') equipItem(index);
+            else useItem(index);
+        });
+
+        const sell = document.createElement('button');
+        sell.className = 'inventory-item-sell';
+        sell.type = 'button';
+
+        const sellPrice = Number(item.sellPrice) > 0
+            ? Number(item.sellPrice)
+            : Math.max(5, Math.floor((Number(item.power) || 5) * 2));
+
+        sell.textContent = 'Продать · ' + sellPrice + ' 🪙';
+
+        sell.addEventListener('click', function (event) {
+            event.stopPropagation();
+            sellInventoryItem(index);
+        });
+
+        actions.append(action, sell);
+        slot.appendChild(actions);
+
+        // Нажатие на ячейку открывает подробности
+        slot.addEventListener('click', function () {
+            openItemDetails(index);
+        });
+
+        inventoryList.appendChild(slot);
+    });
+}
+
+      
+// ===== ОКНО ПОДРОБНОЙ ИНФОРМАЦИИ О ПРЕДМЕТЕ =====
+
+let selectedInventoryItemIndex = null;
+
+// Открытие окна предмета
+function openItemDetails(index) {
+    const items = Array.isArray(player.inventory) ? player.inventory : [];
+    const item = items[index];
+
+    if (!item) return;
+
+    selectedInventoryItemIndex = index;
+
+    const modal = document.getElementById('itemDetailsModal');
+    const name = document.getElementById('detailItemName');
+    const image = document.getElementById('detailItemImage');
+    const stats = document.getElementById('detailItemStats');
+
+    if (!modal || !name || !image || !stats) return;
+
+    name.textContent = item.name || 'Предмет';
+
+    // Изображение предмета
+    image.innerHTML = '';
+
+    const imagePath = typeof item.image === 'string' && item.image.trim()
+        ? item.image.trim()
+        : (item.iconPath || '');
+
+    if (imagePath && !item.shopClass) {
+        const img = document.createElement('img');
+        img.src = imagePath.startsWith('images/')
+            ? imagePath
+            : 'images/' + imagePath.replace(/^\/+/, '');
+        img.alt = item.name || 'Предмет';
+        img.style.width = '100px';
+        img.style.height = '100px';
+        img.style.objectFit = 'contain';
+
+        img.onerror = function () {
+            this.remove();
+            image.textContent = item.icon || '🔮';
+        };
+
+        image.appendChild(img);
+    } else if (item.shopClass) {
+        image.style.backgroundImage = "url('images/5.0.png')";
+        image.style.backgroundSize = 'contain';
+        image.style.backgroundPosition = 'center';
+        image.style.backgroundRepeat = 'no-repeat';
+        image.style.height = '100px';
+    } else {
+        image.textContent = item.icon || '🔮';
+    }
+
+    // Характеристики предмета
+    stats.innerHTML = '';
+
+    const details = [
+        ['Тип', item.type],
+        ['Сила', item.power],
+        ['Атака', item.attack],
+        ['Защита', item.defense],
+        ['Здоровье', item.hp],
+        ['Энергия', item.energy],
+        ['Критический удар', item.crit],
+        ['Описание', item.description]
+    ];
+
+    details.forEach(([label, value]) => {
+        if (value === undefined || value === null || value === '') return;
+
+        const row = document.createElement('div');
+        row.style.padding = '5px 0';
+        row.style.borderBottom = '1px solid rgba(167, 139, 250, 0.2)';
+        row.textContent = label + ': ' + value;
+        stats.appendChild(row);
+    });
+
+    const sellPrice = Number(item.sellPrice) > 0
+        ? Number(item.sellPrice)
+        : Math.max(5, Math.floor((Number(item.power) || 5) * 2));
+
+    const sellButton = document.getElementById('detailSellBtn');
+    const equipButton = document.getElementById('detailEquipBtn');
+
+    if (sellButton) {
+        sellButton.textContent = 'Продать · ' + sellPrice + ' 🪙';
+    }
+
+    if (equipButton) {
+        equipButton.textContent =
+            item.shopClass || item.type === 'bone'
+                ? 'Надеть'
+                : 'Использовать';
+    }
+
+    modal.style.display = 'flex';
+}
+
+// Закрытие окна
+function closeItemDetails() {
+    const modal = document.getElementById('itemDetailsModal');
+
+    if (modal) modal.style.display = 'none';
+
+    selectedInventoryItemIndex = null;
+}
+
+// Кнопка "Надеть / Использовать"
+document.getElementById('detailEquipBtn').addEventListener('click', function () {
+    const index = selectedInventoryItemIndex;
+    const item = player.inventory[index];
+
+    if (!item) return;
+
+    closeItemDetails();
+
+    if (item.shopClass) equipShopItem(index);
+    else if (item.type === 'bone') equipItem(index);
+    else useItem(index);
+});
+
+// Кнопка "Продать"
+document.getElementById('detailSellBtn').addEventListener('click', function () {
+    const index = selectedInventoryItemIndex;
+
+    if (index === null || !player.inventory[index]) return;
+
+    closeItemDetails();
+    sellInventoryItem(index);
+});
+
+// ===== КОНЕЦ ОКНА ПРЕДМЕТА =====
+
+
+        // Продажа предмета из рюкзака: надетые вещи сюда не попадают и случайно не продаются.
+        // ===== ПРОДАЖА ПРЕДМЕТА ИЗ РЮКЗАКА =====
+        function sellInventoryItem(index) {
+            if (!Array.isArray(player.inventory)) player.inventory = [];
+            const item = player.inventory[index];
+            if (!item) return;
+            const price = Number.isFinite(Number(item.sellPrice)) && Number(item.sellPrice) > 0
+                ? Number(item.sellPrice)
+                : Math.max(5, Math.floor((Number(item.power) || 5) * 2));
+            player.coins = (Number(player.coins) || 0) + price;
+            player.inventory.splice(index, 1);
+            saveGame();
+            updateUI();
+            renderInventory();
+            showToast('Продано: ' + (item.name || 'предмет') + '. Получено ' + price + ' монет.');
+        }
+
+        function getGearSlot(item) {
+            if (!item) return 'artifact';
+            if (item.shopClass === 'item-scorpion') return 'head';
+            if (item.shopClass === 'item-wings') return 'armor';
+            if (item.shopClass === 'item-cannon') return 'weapon';
+            if (item.shopClass === 'item-shield') return 'shield';
+            if (item.shopClass === 'item-boots') return 'boots';
+            if (item.shopClass === 'item-necklace') return 'necklace';
+            if (item.shopClass === 'item-ring') return 'ring';
+            if (item.shopClass === 'item-artifact') return 'artifact';
+            return 'artifact';
+        }
+
+        function equipShopItem(index) {
+            const item = player.inventory[index]; if (!item) return;
+            if (!player.equippedGear) player.equippedGear = {};
+            const key = getGearSlot(item);
+            const old = player.equippedGear[key];
+            const mult = (Number(player.rebirthCount) || 0) + 1;
+            if (old) { player.power -= (Number(old.power) || 0) * mult; player.inventory.push(old); }
+            player.equippedGear[key] = item;
+            player.power += (Number(item.power) || 0) * mult;
+            player.inventory.splice(index, 1);
+            log('🛡️ Надет предмет: ' + item.name);
+            saveGame(); updateUI(); renderInventory();
+            showToast('Надето: ' + item.name);
+        }
+
+        function unequipGear(key) {
+            if (!player.equippedGear || !player.equippedGear[key]) return;
+            const item = player.equippedGear[key];
+            const mult = (Number(player.rebirthCount) || 0) + 1;
+            player.power = Math.max(0, player.power - (Number(item.power) || 0) * mult);
+            player.inventory.push(item);
+            delete player.equippedGear[key];
+            saveGame(); updateUI(); renderInventory();
+            showToast('Снято: ' + item.name + '. Предмет вернулся в рюкзак.');
+        }
+
+        function addTestItem() {
+            if (!Array.isArray(player.inventory)) player.inventory = [];
+            player.inventory.push({
+                name: 'Кость Духа (Тест)',
+                type: 'bone',
+                power: 50,
+                icon: '🦴',
+                image: 'items/spirit-bone.png'
+            });
+            saveGame();
+            renderInventory();
+            showToast('Тестовый предмет добавлен.');
+        }
+
+        function useItem(index) {
+            const item = player.inventory[index];
+            if (!item) return;
+            if (item.type === 'bone' || String(item.name || '').includes('Кость Духа')) {
+                player.power += Number(item.power) || 10;
+                showToast('Поглощено: ' + (item.name || 'предмет') + '. Сила увеличена.');
+            } else {
+                showToast('Использован предмет: ' + (item.name || 'предмет'));
+            }
+            player.inventory.splice(index, 1);
+            saveGame();
+            updateUI();
+            renderInventory();
+        }
+
+        function equipItem(index) {
+            const item = player.inventory[index];
+            if (!item) return;
+            if (!player.equipped) player.equipped = { bone: null, weapon: null };
+            player.maxExp = Math.max(100, Number(player.maxExp) || 100);
+            player.maxEnergy = Math.max(1, Number(player.maxEnergy) || 100);
+            player.energy = Math.min(Math.max(0, Number(player.energy) || 0), player.maxEnergy);
+            const mult = (Number(player.rebirthCount) || 0) + 1;
+            if (player.equipped.bone) {
+                player.power -= (Number(player.equipped.bone.power) || 0) * mult;
+                player.inventory.push(player.equipped.bone);
+            }
+            player.equipped.bone = item;
+            player.power += (Number(item.power) || 0) * mult;
+            player.inventory.splice(index, 1);
+            log('🦴 Экипирован артефакт: ' + (item.name || 'Артефакт'));
+            saveGame();
+            updateUI();
+            renderInventory();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('customToast');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function rebirth() {
+            if (player.level >= 99) {
+                player.rebirthCount++;
+                player.level = 1;
+                player.exp = 0;
+                player.maxExp = 100;
+                player.power = 120 * (player.rebirthCount + 1);
+                player.inventory = [];
+                player.equipped = { bone: null, weapon: null };
+                player.equippedGear = {};
+                log(`🌀 ВРАТА ПЕРЕРОЖДЕНИЯ АКТИВИРОВАНЫ!`);
+                saveGame();
+                updateUI();
+            } else {
+                log(`❌ Перерождение доступно на 99 уровне.`);
+            }
+        }
+
+        function updateRingsUI() {
+            let r1 = document.getElementById('ring1');
+            let r2 = document.getElementById('ring2');
+            let r3 = document.getElementById('ring3');
+            let r4 = document.getElementById('ring4');
+
+            if (r1) r1.className = player.level >= 10 ? "ring-orbit ring-1 ring-active" : "ring-orbit ring-1";
+            if (r2) r2.className = player.level >= 30 ? "ring-orbit ring-2 ring-active" : "ring-orbit ring-2";
+            if (r3) r3.className = player.level >= 60 ? "ring-orbit ring-3 ring-active" : "ring-orbit ring-3";
+            if (r4) r4.className = player.level >= 90 ? "ring-orbit ring-4 ring-active" : "ring-orbit ring-4";
+        }
+
+        function checkEpochProgression() {
+            let prevEpoch = player.currentEpoch;
+            if (player.level >= 91) player.currentEpoch = 4;
+            else if (player.level >= 61) player.currentEpoch = 3;
+            else if (player.level >= 31) player.currentEpoch = 2;
+            else player.currentEpoch = 1;
+
+            if (player.currentEpoch !== prevEpoch) {
+                showStoryEvent(player.currentEpoch);
+            }
+            updateEpochUI();
+        }
+
+        function showStoryEvent(epoch) {
+            let title = document.getElementById('storyTitle');
+            let desc = document.getElementById('storyDesc');
+            if (!title || !desc) return;
+
+            if (epoch === 2) {
+                title.innerText = "⚡ АКТ II: ЭРА ТЕХНОЛОГИЙ";
+                desc.innerText = "Мир Духовных Мастеров эволюционирует. Классические секты сталкиваются с инженерией духовных механизмов.";
+            } else if (epoch === 3) {
+                title.innerText = "🏛️ АКТ III: ВОЗРОЖДЕНИЕ КЛАНА ТАН";
+                desc.innerText = "Наследие Тан Саня всё ещё хранит этот мир, но старые секты уступают место новому поколению.";
+            } else if (epoch === 4) {
+                title.innerText = "👑 АКТ IV: ПУТЬ К БОЖЕСТВУ";
+                desc.innerText = "Барьер смертных рушится. Вы стоите на пороге Божественного Царства.";
+            }
+            openModal('storyModal');
+        }
+
+        function updateEpochUI() {
+            let nameEl = document.getElementById('epochName');
+            let subEl = document.getElementById('epochDescSub');
+            let iconEl = document.getElementById('epochIcon');
+
+            if (player.currentEpoch === 1) {
+                if (nameEl) nameEl.innerText = "Акт I: Пробуждение";
+                if (subEl) subEl.innerText = "Эпоха Академии Шрек (Ур. 1-30)";
+            } else if (player.currentEpoch === 2) {
+                if (nameEl) nameEl.innerText = "Акт II: Технологии";
+                if (subEl) subEl.innerText = "Эра Духовных Механизмов (Ур. 31-60)";
+            } else if (player.currentEpoch === 3) {
+                if (nameEl) nameEl.innerText = "Акт III: Возрождение";
+                if (subEl) subEl.innerText = "Клан Тан и Конфликт (Ур. 61-90)";
+            } else if (player.currentEpoch === 4) {
+                if (nameEl) nameEl.innerText = "Акт IV: Трансценденция";
+                if (subEl) subEl.innerText = "Путь к Божеству (Ур. 91+)";
+            }
+        }
+
+
+function getHeroImagePosition(h) {
+    // Координаты соответствуют настройкам окна выбора персонажа
+    const offsets = {
+        sanshi:   { x: 10, y: 0 },
+        xiaoxiao: { x: 0, y: 0 },
+        beibei:   { x: 0, y: 0 },
+        wangdong: { x: 0, y: 0 },
+        yuhao:    { x: 10, y: -18 },
+        nannan:   { x: 15, y: -18 },
+        caitou:   { x: 22, y: -18 }
+    };
+
+    const offset = offsets[h.key] || { x: 0, y: 0 };
+
+    return {
+        x: (h.imageCol / 3) * 100 + offset.x,
+        y: h.imageRow * 100 + offset.y
+    };
+}
+
+          
+        function updateUI() {
+            let expEl = document.getElementById('expText');
+            let expBar = document.getElementById('expBar');
+            let energyEl = document.getElementById('energyText');
+            let energyBar = document.getElementById('energyBar');
+            let powerEl = document.getElementById('powerText');
+            let shardsEl = document.getElementById('shardsText');
+            let boneEl = document.getElementById('equippedBone');
+            let nameHeader = document.getElementById('heroNameHeader');
+            let abilityText = document.getElementById('heroAbilityText');
+            let rankEl = document.getElementById('rankText');
+            let avatar = document.getElementById('avatarIcon');
+            let rebirthBtn = document.getElementById('rebirthBtn');
+            let rebirthCountText = document.getElementById('rebirthCountText');
+            let coinsDisplay = document.getElementById('user-coins');
+
+            if (expEl) expEl.innerText = `${player.exp} / ${player.maxExp}`;
+            if (expBar) expBar.style.width = Math.min((player.exp / player.maxExp) * 100, 100) + '%';
+            
+            if (energyEl) energyEl.innerText = `${Math.floor(player.energy)} / ${player.maxEnergy}`;
+            if (energyBar) energyBar.style.width = Math.min((player.energy / player.maxEnergy) * 100, 100) + '%';
+            
+            if (powerEl) powerEl.innerText = Math.floor(player.power);
+            if (shardsEl) shardsEl.innerText = player.shards;
+// ===== ОБНОВЛЕНИЕ ХАРАКТЕРИСТИК В ИНВЕНТАРЕ =====
+
+let invLevel = document.getElementById('invLevel');
+let invRank = document.getElementById('invRank');
+let invPower = document.getElementById('invPower');
+let invEnergy = document.getElementById('invEnergy');
+let invExp = document.getElementById('invExp');
+let invShards = document.getElementById('invShards');
+let invRebirth = document.getElementById('invRebirth');
+
+// Уровень
+if (invLevel) {
+    invLevel.innerText = player.level;
+}
+
+// Ранг
+let inventoryRankIndex = Math.min(
+    Math.floor((player.level - 1) / 10),
+    ranks.length - 1
+);
+
+if (invRank) {
+    invRank.innerText = ranks[inventoryRankIndex];
+}
+
+// Сила
+if (invPower) {
+    invPower.innerText = Math.floor(player.power);
+}
+
+// Энергия
+if (invEnergy) {
+    invEnergy.innerText =
+        `${Math.floor(player.energy)} / ${player.maxEnergy}`;
+}
+
+// Опыт
+if (invExp) {
+    invExp.innerText =
+        `${player.exp} / ${player.maxExp}`;
+}
+
+// Осколки
+if (invShards) {
+    invShards.innerText = player.shards;
+}
+
+// Перерождения
+if (invRebirth) {
+    invRebirth.innerText = player.rebirthCount;
+}
+          
+            if (boneEl) boneEl.innerText = player.equipped.bone ? player.equipped.bone.name : 'Нет';
+            if (rebirthCountText) rebirthCountText.innerText = player.rebirthCount;
+            if (coinsDisplay) coinsDisplay.innerText = player.coins !== undefined ? player.coins : 1000;
+            
+            if (nameHeader) nameHeader.innerText = player.heroName || "Охотник";
+            if (abilityText) abilityText.innerText = player.abilityDesc || "Система активна";
+            
+            let rankIndex = Math.min(Math.floor((player.level - 1) / 10), ranks.length - 1);
+            if (rankEl) rankEl.innerText = `${ranks[rankIndex]} (Lvl ${player.level})`;
+
+            // ===== НОВАЯ АВАТАРКА ВЫБРАННОГО ГЕРОЯ =====
+if (avatar) {
+
+    // Находим выбранного персонажа
+    const hero = heroes.find(h => h.key === player.heroKey);
+
+    if (hero) {
+
+        // Получаем координаты его фотографии
+        const pos = getHeroImagePosition(hero);
+
+        // Убираем старую фотографию
+        avatar.innerHTML = "";
+
+        // Загружаем общую фотографию с нужным персонажем
+        avatar.style.backgroundImage = `url("${HEROES_IMAGE}")`;
+        avatar.style.backgroundSize = "400% 200%";
+        avatar.style.backgroundPosition = `${pos.x}% ${pos.y}%`;
+        avatar.style.backgroundRepeat = "no-repeat";
+
+        // Рамка и свечение выбранного героя
+        avatar.style.borderColor = hero.aura;
+        avatar.style.boxShadow = `0 0 15px ${hero.aura}`;
+    }
+}
+
+            document.documentElement.style.setProperty('--aura-color', player.heroAura || "#38bdf8");
+
+            updateRingsUI();
+            if (document.getElementById('inventoryView')?.style.display === 'flex') renderEquipment();
+            checkEpochProgression();
+
+            if (rebirthBtn) rebirthBtn.style.display = player.level >= 99 ? 'flex' : 'none';
+        }
+
+        function log(message) {
+            let logBox = document.getElementById('logBox');
+            if (!logBox) return;
+            let div = document.createElement('div');
+            div.className = 'log-row';
+            div.innerText = `> ${message}`;
+            logBox.prepend(div);
+        }
+
+        function meditate() {
+            let mult = player.rebirthCount + 1;
+            let energyBonus = (player.heroKey === 'oscar') ? 38 : 25;
+            player.exp += (20 * mult);
+            player.coins = (Number(player.coins) || 0) + (5 * mult);
+            player.energy = Math.min(player.maxEnergy, player.energy + energyBonus);
+            log(`🧘 Медитация: энергия восстановлена, +${5 * mult} монет.`);
+            checkLevelUp();
+            saveGame();
+            updateUI();
+        }
+
+        function claimBonus() {
+            let now = Date.now();
+            let mult = player.rebirthCount + 1;
+            if (now - player.lastBonusTime > 60000) {
+                player.lastBonusTime = now;
+                player.exp += (180 * mult);
+                player.shards += (60 * mult);
+                const bonusCoins = 100 * mult;
+                player.coins = (Number(player.coins) || 0) + bonusCoins;
+                player.energy = player.maxEnergy;
+                log(`🎁 Ежедневный дар Системы: +${bonusCoins} монет!`);
+                checkLevelUp();
+                saveGame();
+                updateUI();
+            } else {
+                log("⏳ Дар перезаряжается.");
+            }
+        }
+
+        function checkLevelUp() {
+            while (player.exp >= player.maxExp && player.level < 99) {
+                player.exp -= player.maxExp;
+                player.level += 1;
+                player.power += (35 * (player.rebirthCount + 1));
+                player.maxEnergy += 10;
+                player.energy = player.maxEnergy;
+                player.maxExp = Math.floor(player.maxExp * 1.35);
+                log(`🎉 Новый уровень! Достигнут ${player.level} уровень.`);
+            }
+        }
+
+        
+        // Магазин закрывается кнопкой «Назад», как отдельная вкладка.
+
+        window.onload = function() {
+            loadGame();
+            updateUI();
+        };
+
+      
+      
+    </script>
+
+    <!-- Подключение Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const SUPABASE_URL = 'https://jfundmuafqosompuokbd.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_2_GtP3v7GRq_F6aVnh3g3A_Hdoozedf';
+
+        const supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+        console.log('Supabase подключён');
+
+
+// ===== РЕГИСТРАЦИЯ И ВХОД =====
+
+function showAuthMessage(message, color = '#facc15') {
+    const box = document.getElementById('authMessage');
+    if (box) {
+        box.textContent = message;
+        box.style.color = color;
+    }
+}
+
+async function registerAccount() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+
+    if (!email || password.length < 6) {
+        showAuthMessage('Укажи почту и пароль минимум из 6 символов.');
+        return;
+    }
+
+    showAuthMessage('Создаём аккаунт...');
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            data: {
+                username: email.split('@')[0]
+            }
+        }
+    });
+
+    if (error) {
+        showAuthMessage(error.message, '#f87171');
+        return;
+    }
+
+    if (data.session) {
+        showAuthMessage('Регистрация успешна!', '#4ade80');
+    } else {
+        showAuthMessage(
+            'Аккаунт создан! Проверь почту и подтверди регистрацию.',
+            '#4ade80'
+        );
+    }
+}
+
+async function loginAccount() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+
+    if (!email || !password) {
+        showAuthMessage('Введи почту и пароль.');
+        return;
+    }
+
+    showAuthMessage('Выполняется вход...');
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        showAuthMessage(error.message, '#f87171');
+        return;
+    }
+
+    showAuthMessage('Вход выполнен!', '#4ade80');
+    updateAuthScreen(data.session);
+}
+
+function updateAuthScreen(session) {
+    const screen = document.getElementById('authScreen');
+
+    if (screen) {
+        screen.style.display = session ? 'none' : 'flex';
+    }
+}
+
+// Проверка существующего входа
+async function checkAuthSession() {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error) {
+        showAuthMessage('Ошибка проверки аккаунта.');
+        return;
+    }
+
+    updateAuthScreen(data.session);
+}
+
+// Отслеживание входа и выхода
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    updateAuthScreen(session);
+});
+
+// Выход из аккаунта
+async function logoutAccount() {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        alert('Не удалось выйти: ' + error.message);
+        return;
+    }
+
+    updateAuthScreen(null);
+}
+
+// Проверяем аккаунт при запуске
+checkAuthSession();
+
+      
+    </script>
+
+</body>
+</html>
